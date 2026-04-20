@@ -19,6 +19,11 @@ int main()
     int vitality = 50;
     int energy = 50;
 
+    int fireResist = 0;
+    int lightningResist = 0;
+    int coldResist = 0;
+    int poisonResist = 0;
+
     // 하드코어 모드 여부 변수
     bool isHardcore = true;
 
@@ -48,6 +53,11 @@ int main()
     // 3. sizeof 연산자를 이용한 메모리 크기 확인
     cout << "[Memory Check] int type size: " << sizeof(hp) << " bytes\n";
     cout << "[Memory Check] bool type size: " << sizeof(isHardcore) << " bytes\n";
+
+    cout << "Fire Resist : " << fireResist << '\n';
+	cout << "Lightning Resist : " << lightningResist << '\n';
+	cout << "Cold Resist : " << coldResist << '\n';
+	cout << "Poison Resist : " << poisonResist << '\n';
 
     return 0;
 }
