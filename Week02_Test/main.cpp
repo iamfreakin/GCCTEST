@@ -6,6 +6,7 @@ int main()
 {
     char userName[50];
     char charactorClass[50];
+    char hardcoreInput;
 
     // // 스탯 시스템
     int strength = 50;
@@ -33,6 +34,23 @@ int main()
     cin >> userName;
     cout << "Input your Class : ";
     cin >> charactorClass;
+
+    cout << "Enable Hardcore Mode? (1) Yes / (0) No : ";
+    cin >> hardcoreInput;
+
+    // // if, else if, else 조건문 사용 (참, 거짓 에 대한 분기)
+    if (hardcoreInput == '1') {
+        isHardcore = true;
+        cout << "[System] Hardcore mode enabled. Death is permanent.\n";
+    }
+    else if (hardcoreInput == '0') {
+        isHardcore = false;
+        cout << "[System] Standard mode enabled.\n";
+    }
+    else {
+        isHardcore = false;
+        cout << "[System] Invalid input. Defaulting to Standard mode.\n";
+    }
 
     cout << "\n::::::::: Welcome to the Sanctuary :::::::::\n";
     cout << "User Name : [" << userName << "]\n";
