@@ -65,11 +65,6 @@ int main()
             break;
     }
 
-
-
-
-
-
     cout << "\n::::::::: Welcome to the Sanctuary :::::::::\n";
     cout << "User Name : [" << userName << "]\n";
 
@@ -87,14 +82,53 @@ int main()
     cout << "Hardcore Mode : " << isHardcore << " (1: true, 0: false)\n";
     cout << "--------------------------------------------------------\n";
 
-    // 3. sizeof 연산자를 이용한 메모리 크기 확인
-    cout << "[Memory Check] int type size: " << sizeof(hp) << " bytes\n";
-    cout << "[Memory Check] bool type size: " << sizeof(isHardcore) << " bytes\n";
+    // 기본 전투 시스템 - while문 사용 (거짓일 때 까지 무한 루프)
+    int goblinHp = 30; // 고블린 체력
+    int action;
 
-    cout << "Fire Resist : " << fireResist << '\n';
-	cout << "Lightning Resist : " << lightningResist << '\n';
-	cout << "Cold Resist : " << coldResist << '\n';
-	cout << "Poison Resist : " << poisonResist << '\n';
+    cout << "\n[System] You encountered a Goblin!\n";
+
+    // 둘 다 체력이 0보다 큰(살아있는) 동안 무한 반복
+    while (goblinHp > 0 && hp > 0) {
+        cout << "\n[ Goblin HP: " << goblinHp << " | My HP: " << hp << " ]\n";
+        cout << "1. Attack : ";
+        cin >> action;
+
+        if (action == 1) {
+            // 1. 플레이어의 공격
+            goblinHp -= attackDamage;
+            cout << "=> You attacked the Goblin! (-" << attackDamage << ")\n";
+
+            // 2. 고블린의 반격
+            if (goblinHp > 0) {
+                hp -= 30;
+                cout << "=> The Goblin attacked you! (-30)\n";
+            }
+        }
+        else {
+            cout << "=> Invalid action! You stumbled and the Goblin seized the chance!\n";
+            hp -= 30;
+            cout << "=> The Goblin attacked you! (-30)\n";
+        }
+    }
+
+    // 전투 종료 후 결과 판정
+    cout << "\n";
+    if (hp <= 0) {
+        cout << "[System] You died...\n";
+    }
+    else {
+        cout << "[System] You defeated the Goblin!\n";
+    }
+
+ //   // 3. sizeof 연산자를 이용한 메모리 크기 확인
+ //   cout << "[Memory Check] int type size: " << sizeof(hp) << " bytes\n";
+ //   cout << "[Memory Check] bool type size: " << sizeof(isHardcore) << " bytes\n";
+
+ //   cout << "Fire Resist : " << fireResist << '\n';
+	//cout << "Lightning Resist : " << lightningResist << '\n';
+	//cout << "Cold Resist : " << coldResist << '\n';
+	//cout << "Poison Resist : " << poisonResist << '\n';
 
     return 0;
 }
