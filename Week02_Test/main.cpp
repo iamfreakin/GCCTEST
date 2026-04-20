@@ -1,134 +1,141 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+#include <iomanip>
+#include <deque> // 로그 목록 관리를 위해 추가 
 
 using namespace std;
 
-int main()
-{
-    char userName[50];
-    string charactorClass;
-	int classChoiceInput = 0;
-    char hardcoreInput;
-
-    // // 스탯 시스템
-    int strength = 50;
-    int dexterity = 50;
-    int vitality = 50;
-    int energy = 50;
-
-    // // 1. 다양한 자료형의 변수 선언 및 초기값 할당
+struct GameData {
+    string name;
+    string job;
     int level = 1;
-    int hp = vitality * 2;
-    int mp = energy * 1.5;
-    float attackDamage = strength * 0.2f;
-    float attackSpeed = dexterity / 10.0f;
-    double movingSpeed = dexterity / 30.0;
-    int fireResist = 0;
-    int lightningResist = 0;
-    int coldResist = 0;
-    int poisonResist = 0;
+    int hp, mp;
+    float atkSpd, atkDmg;
+    int str, dex, vit, eng;
+    bool hardcore;
+    deque<string> logs; // 여러 줄의 로그를 담는 저장소 
+};
 
-    // // 하드코어 모드 여부 변수
-    bool isHardcore = true;
-
-    cout << "[ Character Creation ]\n";
-    cout << "Input your name : ";
-    cin >> userName;
-    cout << "\nSelect your Class :\n(1) Warrior\n(2) Rogue\n(3) Sorcerer\n";
-	cout << "Input class number : ";
-	cin >> classChoiceInput;
-
-    cout << "Enable Hardcore Mode? (1) Yes / (0) No : ";
-    cin >> hardcoreInput;
-
-    // // if, else if, else 조건문 사용 (참, 거짓 에 대한 분기)
-    if (hardcoreInput == '1') {
-        isHardcore = true;
-        cout << "[System] Hardcore mode enabled. Death is permanent.\n";
+// 로그를 추가하고 최대 줄 수를 유지하는 함수
+void AddLog(GameData& data, string message) {
+    data.logs.push_back(message); // 새 로그를 맨 뒤에 추가 
+    if (data.logs.size() > 6) {    // 최대 6줄까지만 유지 (상태창 높이에 맞춤)
+        data.logs.pop_front();    // 가장 오래된 로그 삭제 
     }
-    else if (hardcoreInput == '0') {
-        isHardcore = false;
-        cout << "[System] Standard mode enabled.\n";
-    }
-    else {
-        isHardcore = false;
-        cout << "[System] Invalid input. Defaulting to Standard mode.\n";
-    }
+}
 
-    switch (classChoiceInput)
-    {
-        case 1: charactorClass = "Warrior"; break;
-        case 2: charactorClass = "Rogue"; break;
-        case 3: charactorClass = "Sorcerer"; break;
-        default:
-            charactorClass = "Unknown";
-            cout << "[System] Invalid choice. Defaulting to Unknown.\n";
-            break;
+// 1. 전체 화면 렌더링 함수 (멀티라인 지원)
+void RenderScene(const GameData& data) {
+    system("cls");
+
+    cout << "====================================================================================================" << endl;
+    cout << " [ GAME PROGRESS LOG ]                                      | [ CHARACTER STATUS ]" << endl;
+    cout << "====================================================================================================" << endl;
+
+    // 우측 상태창 항목을 배열로 미리 준비
+    string status[6];
+    status[0] = "  NAME : " + data.name;
+    status[1] = "  CLASS: " + data.job + " (Lv." + to_string(data.level) + ")";
+    status[2] = "  HP   : " + to_string(data.hp) + " / MP: " + to_string(data.mp);
+    status[3] = "  ATK  : " + to_string((int)data.atkDmg) + " / SPD: " + to_string(data.atkSpd).substr(0, 3);
+    status[4] = "  STATS: STR:" + to_string(data.str) + " DEX:" + to_string(data.dex) + " VIT:" + to_string(data.vit);
+    status[5] = "  MODE : " + string(data.hardcore ? "HARDCORE" : "STANDARD");
+
+    // 좌측 로그와 우측 상태창을 한 줄씩 짝지어 출력
+    for (int i = 0; i < 6; i++) {
+        string displayLog = (i < data.logs.size()) ? " > " + data.logs[i] : "";
+        cout << left << setw(60) << displayLog << "| " << status[i] << endl;
     }
 
-    cout << "\n::::::::: Welcome to the Sanctuary :::::::::\n";
-    cout << "User Name : [" << userName << "]\n";
+    cout << "====================================================================================================" << endl;
+}
 
-    // 2. 변수에 저장된 데이터 출력
-    cout << "--------------------Character Status--------------------\n";
-    cout << "Class : " << charactorClass << "\n";
-    cout << "Level : " << level << "\n";
-    cout << "HP : " << hp << "\n";
-    cout << "MP : " << mp << "\n";
-    cout << "Attack Speed : " << attackSpeed << "\n";
-    cout << "Strength : " << strength << "\n";
-    cout << "Dexterity : " << dexterity << "\n";
-    cout << "Vitality : " << vitality << "\n";
-    cout << "Energy : " << energy << "\n";
-    cout << "Hardcore Mode : " << isHardcore << " (1: true, 0: false)\n";
-    cout << "--------------------------------------------------------\n";
+// 2. 캐릭터 생성 함수
+void CreateCharacter(GameData& data) {
+    int classChoice;
+    char hardcoreChoice;
 
-    // 기본 전투 시스템 - while문 사용 (거짓일 때 까지 무한 루프)
-    int goblinHp = 30; // 고블린 체력
+    cout << " [ Character Creation ] " << endl;
+    cout << " Input your name : "; cin >> data.name;
+    cout << "\n (1) Warrior  (2) Rogue  (3) Sorcerer\n Input class number : "; cin >> classChoice;
+
+    switch (classChoice) {
+    case 1: data.job = "Warrior"; break;
+    case 2: data.job = "Rogue"; break;
+    case 3: data.job = "Sorcerer"; break;
+    default: data.job = "Unknown"; break;
+    }
+
+    cout << " Enable Hardcore Mode? (1) Yes / (0) No : "; cin >> hardcoreChoice;
+    data.hardcore = (hardcoreChoice == '1');
+
+    AddLog(data, "Welcome, " + data.name + ". Your journey begins now.");
+}
+
+// 3. 전투 시스템 함수 (멀티라인 로그 활용)
+bool StartBattle(GameData& data) {
+    int goblinHp = 30;
     int action;
+    AddLog(data, "A Goblin appeared from the shadows!");
 
-    cout << "\n[System] You encountered a Goblin!\n";
+    while (goblinHp > 0 && data.hp > 0) {
+        RenderScene(data);
 
-    // 둘 다 체력이 0보다 큰(살아있는) 동안 무한 반복
-    while (goblinHp > 0 && hp > 0) {
-        cout << "\n[ Goblin HP: " << goblinHp << " | My HP: " << hp << " ]\n";
-        cout << "1. Attack : ";
+        cout << "\n [Action] 1.Attack  : ";
         cin >> action;
 
         if (action == 1) {
-            // 1. 플레이어의 공격
-            goblinHp -= attackDamage;
-            cout << "=> You attacked the Goblin! (-" << attackDamage << ")\n";
+            goblinHp -= (int)data.atkDmg;
+            AddLog(data, "You dealt " + to_string((int)data.atkDmg) + " damage to Goblin.");
 
-            // 2. 고블린의 반격
-            if (goblinHp > 0) {
-                hp -= 30;
-                cout << "=> The Goblin attacked you! (-30)\n";
-            }
+                if (goblinHp > 0) {
+                    data.hp -= 30;
+                    AddLog(data, "Goblin counter-attacks! You lost 30 HP.");
+                }
         }
         else {
-            cout << "=> Invalid action! You stumbled and the Goblin seized the chance!\n";
-            hp -= 30;
-            cout << "=> The Goblin attacked you! (-30)\n";
+            AddLog(data, "Invalid action! You stumbled.");
         }
     }
+    return data.hp > 0;
+}
 
-    // 전투 종료 후 결과 판정
-    cout << "\n";
-    if (hp <= 0) {
-        cout << "[System] You died...\n";
+// 4. 전리품 획득 함수
+void Looting(GameData& data) {
+    srand((unsigned int)time(NULL));
+    AddLog(data, "Searching the Goblin's remains...");
+
+    for (int i = 1; i <= 2; i++) { // 너무 많으면 로그가 밀리므로 2개만
+        int roll = rand() % 4;
+        string item = (roll == 0) ? "Gold" : (roll == 1) ? "Potion" : (roll == 2) ? "Weapon" : "Armor";
+        AddLog(data, "Found item: [" + item + "]");
+    }
+
+    RenderScene(data);
+    cout << "\n Press any key to continue...";
+    system("pause > nul");
+}
+
+int main() {
+    GameData player;
+    player.str = 50; player.dex = 50; player.vit = 50; player.eng = 50;
+    player.hp = player.vit * 2;
+    player.mp = (int)(player.eng * 1.5);
+    player.atkDmg = player.str * 0.2f;
+    player.atkSpd = player.dex / 10.0f;
+
+    CreateCharacter(player);
+
+    if (StartBattle(player)) {
+        AddLog(player, "Victory! You defeated the Goblin.");
+        Looting(player);
     }
     else {
-        cout << "[System] You defeated the Goblin!\n";
+        AddLog(player, "You have fallen in battle...");
+        RenderScene(player);
     }
-
- //   // 3. sizeof 연산자를 이용한 메모리 크기 확인
- //   cout << "[Memory Check] int type size: " << sizeof(hp) << " bytes\n";
- //   cout << "[Memory Check] bool type size: " << sizeof(isHardcore) << " bytes\n";
-
- //   cout << "Fire Resist : " << fireResist << '\n';
-	//cout << "Lightning Resist : " << lightningResist << '\n';
-	//cout << "Cold Resist : " << coldResist << '\n';
-	//cout << "Poison Resist : " << poisonResist << '\n';
 
     return 0;
 }
