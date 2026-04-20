@@ -7,24 +7,25 @@ int main()
     char userName[50];
     char charactorClass[50];
 
-    // 1. 다양한 자료형의 변수 선언 및 초기값 할당
-    int level = 1;
-    int hp = 100;
-    int mp = 100;
-    float attackSpeed = 5.5f;
-
-    // 스탯 시스템
+    // // 스탯 시스템
     int strength = 50;
     int dexterity = 50;
     int vitality = 50;
     int energy = 50;
 
+    // // 1. 다양한 자료형의 변수 선언 및 초기값 할당
+    int level = 1;
+    int hp = vitality * 2;
+    int mp = energy * 1.5;
+    float attackDamage = strength * 0.2f;
+    float attackSpeed = dexterity / 10.0f;
+    double movingSpeed = dexterity / 30.0;
     int fireResist = 0;
     int lightningResist = 0;
     int coldResist = 0;
     int poisonResist = 0;
 
-    // 하드코어 모드 여부 변수
+    // // 하드코어 모드 여부 변수
     bool isHardcore = true;
 
     cout << "[ Character Creation ]\n";
