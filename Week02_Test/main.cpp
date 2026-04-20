@@ -5,7 +5,8 @@ using namespace std;
 int main()
 {
     char userName[50];
-    char charactorClass[50];
+    string charactorClass;
+	int classChoiceInput = 0;
     char hardcoreInput;
 
     // // 스탯 시스템
@@ -32,8 +33,9 @@ int main()
     cout << "[ Character Creation ]\n";
     cout << "Input your name : ";
     cin >> userName;
-    cout << "Input your Class : ";
-    cin >> charactorClass;
+    cout << "\nSelect your Class :\n(1) Warrior\n(2) Rogue\n(3) Sorcerer\n";
+	cout << "Input class number : ";
+	cin >> classChoiceInput;
 
     cout << "Enable Hardcore Mode? (1) Yes / (0) No : ";
     cin >> hardcoreInput;
@@ -51,6 +53,22 @@ int main()
         isHardcore = false;
         cout << "[System] Invalid input. Defaulting to Standard mode.\n";
     }
+
+    switch (classChoiceInput)
+    {
+        case 1: charactorClass = "Warrior"; break;
+        case 2: charactorClass = "Rogue"; break;
+        case 3: charactorClass = "Sorcerer"; break;
+        default:
+            charactorClass = "Unknown";
+            cout << "[System] Invalid choice. Defaulting to Unknown.\n";
+            break;
+    }
+
+
+
+
+
 
     cout << "\n::::::::: Welcome to the Sanctuary :::::::::\n";
     cout << "User Name : [" << userName << "]\n";
