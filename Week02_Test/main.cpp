@@ -221,8 +221,62 @@ void Looting(GameData& data) {
     system("pause > nul");
 }
 
+// --- [ 포인터 개념 확인 함수 ] ---
+// 
+// 1. 포인터의 기본: 주소, 참조, 역참조 확인
+void practiceBasicPointer() {
+    cout << "=== 1. Basic Pointer Practice ===" << endl;
+    int gold = 500;
+    int* ptr = &gold; // gold의 주소를 ptr에 저장
+
+    cout << "1. 변수 gold의 값: " << gold << endl;
+    cout << "2. 변수 gold의 주소 (&gold): " << &gold << endl;
+    cout << "3. 포인터 ptr이 들고 있는 값 (주소): " << ptr << endl;
+    cout << "4. 포인터로 접근한 값 (*ptr): " << *ptr << endl;
+
+    *ptr = 1000; // 역참조를 통해 원본 값 변경
+    cout << "5. 역참조로 수정한 후 gold의 값: " << gold << endl << endl;
+}
+
+// 2. 포인터 변수 자체의 크기 (자료형과 무관함)
+void practicePointerSize() {
+    cout << "=== 2. Pointer Size Practice ===" << endl;
+    char* cPtr;
+    int* iPtr;
+    double* dPtr;
+    long long* lPtr;
+
+    // 가리키는 대상의 크기 vs 주소값 자체의 크기
+    cout << "char* 크기: " << sizeof(cPtr) << " bytes" << endl;
+    cout << "int* 크기: " << sizeof(iPtr) << " bytes" << endl;
+    cout << "double* 크기: " << sizeof(dPtr) << " bytes" << endl;
+    cout << "long long* 크기: " << sizeof(lPtr) << " bytes" << endl;
+    cout << "=> 어떤 타입이든 '주소'의 크기는 시스템(64/32bit)에 따라 동일함!" << endl << endl;
+}
+
+// 3. 포인터 연산: 주소값이 점프하는 규칙
+void practicePointerArithmetic() {
+    cout << "=== 3. Pointer Arithmetic Practice ===" << endl;
+    int arr[3] = { 10, 20, 30 };
+    int* p = arr; // 배열 이름은 첫 번째 요소의 주소
+
+    cout << "현재 주소 (p): " << p << " | 값: " << *p << endl;
+    cout << "다음 주소 (p+1): " << (p + 1) << " | 값: " << *(p + 1) << endl;
+
+    // 주소값의 차이를 계산 (16진수 계산 확인용)
+    uintptr_t addr1 = (uintptr_t)p;
+    uintptr_t addr2 = (uintptr_t)(p + 1);
+    cout << "주소값 차이: " << addr2 - addr1 << " bytes (sizeof(int)만큼 차이남)" << endl << endl;
+}
+
+// 실습하고 싶은 함수의 주석을 해제하세요.
+//practiceBasicPointer();
+//practicePointerSize();
+//practicePointerArithmetic();
+
+
 int main() {
-    HideCursor();
+/*    HideCursor();
     srand((unsigned int)time(NULL));
 
     GameData player;
@@ -245,6 +299,9 @@ int main() {
         cout << " --- GAME OVER ---" << endl;
     }
 
-    SetColor(15);
+    SetColor(15);*/
+    practiceBasicPointer();
+    practicePointerSize();
+    practicePointerArithmetic();
     return 0;
 }
