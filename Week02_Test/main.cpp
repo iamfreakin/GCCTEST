@@ -13,18 +13,26 @@ struct MonsterData {
     string name = "";
     int hp = 0;
     int maxHp = 0;
+    int atk = 0;      // [추가] 몬스터 공격력
     bool active = false;
 };
 
 // 게임 데이터 구조체
 struct GameData {
-    string name;
-    string job;
+    string name = "Unknown";   // 초기값 부여
+    string job = "None";      // 초기값 부여
     int level = 1;
-    int maxHp = 100, hp, mp;
-    float atkSpd, atkDmg;
-    int str, dex, vit, eng;
-    bool hardcore;
+    int maxHp = 100;
+    int hp = 100;             // 초기값 필수!
+    int mp = 0;               // 초기값 필수!
+    float atkSpd = 1.0f;      // 초기값 필수!
+    float atkDmg = 10.0f;     // 초기값 필수!
+    int str = 0;              // 초기값 필수!
+    int dex = 0;              // 초기값 필수!
+    int vit = 0;              // 초기값 필수!
+    int eng = 0;              // 초기값 필수!
+    bool hardcore = false;    // 초기값 필수!
+    int inventory[4] = { 0, 0, 0, 0 };
     deque<string> logs;
     MonsterData currentMonster;
 };
@@ -62,7 +70,10 @@ void RenderScene(const GameData& data) {
     cout << "│      [ ENEMY STATUS ]        │            [ GAME PROGRESS LOG ]            │        [ CHARACTER STATUS ]       │" << endl;
     cout << "├──────────────────────────────┼─────────────────────────────────────────────┼───────────────────────────────────┤" << endl;
 
-    for (int i = 0; i < 6; i++) {
+    string invStr = "  INV   : G:" + to_string(data.inventory[0]) + " P:" + to_string(data.inventory[1]) +
+        " W:" + to_string(data.inventory[2]) + " A:" + to_string(data.inventory[3]);
+
+    for (int i = 0; i < 7; i++) {
         SetColor(8); cout << "│";
 
         // 1. 좌측 영역: 몬스터 (30칸)
@@ -78,6 +89,9 @@ void RenderScene(const GameData& data) {
                 for (int j = 0; j < 10; j++) mBar += (j < mSeg) ? "#" : "-";
                 mBar += "] " + to_string(data.currentMonster.hp);
                 cout << left << setw(21) << mBar;
+            }
+            else if (i == 3) {
+                SetColor(12); cout << left << setw(30) << ("  ATK  : " + to_string(data.currentMonster.atk));
             }
             else cout << setw(30) << "";
         }
@@ -111,17 +125,17 @@ void RenderScene(const GameData& data) {
         }
         else if (i == 3) cout << left << setw(35) << ("  ATK   : " + to_string((int)data.atkDmg) + " / SPD: " + to_string(data.atkSpd).substr(0, 3));
         else if (i == 4) cout << left << setw(35) << ("  STATS : S:" + to_string(data.str) + " D:" + to_string(data.dex) + " V:" + to_string(data.vit));
+        else if (i == 5) { SetColor(14); cout << left << setw(35) << invStr; }
         else cout << left << setw(35) << ("  MODE  : " + string(data.hardcore ? "HARDCORE" : "STANDARD"));
 
         SetColor(8); cout << "│" << endl;
     }
     cout << "└──────────────────────────────┴─────────────────────────────────────────────┴───────────────────────────────────┘" << endl;
 
-    // 클리닝 및 커서 고정
     SetColor(15);
     cout << "                                                                                                    " << endl;
     cout << "                                                                                                    " << endl;
-    COORD coord = { 0, 11 };
+    COORD coord = { 0, 12 };
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
@@ -138,9 +152,7 @@ void LoadingEffect(const GameData& data, string message) {
 }
 
 void CreateCharacter(GameData& data) {
-    int choice;
-    char hc;
-
+    int choice; char hc;
     system("cls");
     SetColor(11);
     cout << "┌────────────────────────────────────────────────────────────┐" << endl;
@@ -160,23 +172,25 @@ void CreateCharacter(GameData& data) {
     cout << " > Enable Hardcore Mode? (1)Yes (0)No : "; cin >> hc;
     data.hardcore = (hc == '1');
 
-    // 스탯 최종 계산
-    data.hp = data.vit;
-    data.maxHp = data.vit;
-    data.atkDmg = data.str * 0.25f;
-    data.atkSpd = data.dex / 10.0f;
+    data.hp = data.vit; data.maxHp = data.vit;
+    data.atkDmg = data.str * 0.25f; data.atkSpd = data.dex / 10.0f;
 
     AddLog(data, "Welcome, " + data.name + ". Your journey begins.");
     LoadingEffect(data, "Generating Character Data");
 }
 
 bool StartBattle(GameData& data) {
-    data.currentMonster.name = "Elite Goblin";
-    data.currentMonster.maxHp = 60;
-    data.currentMonster.hp = 60;
+    // [랜덤 몬스터 생성 로직]
+    string names[] = { "Slime", "Goblin", "Orc", "Skeleton", "Wild Wolf" };
+    data.currentMonster.name = names[rand() % 5];
+
+    // 플레이어가 100 HP일 때 적절한 난이도 (30~70 HP, 7~15 ATK)
+    data.currentMonster.maxHp = rand() % 41 + 30;
+    data.currentMonster.hp = data.currentMonster.maxHp;
+    data.currentMonster.atk = rand() % 9 + 7;
     data.currentMonster.active = true;
 
-    AddLog(data, "A " + data.currentMonster.name + " appeared!");
+    AddLog(data, "A " + data.currentMonster.name + " appeared from the shadows!");
     int act;
 
     while (data.currentMonster.hp > 0 && data.hp > 0) {
@@ -191,8 +205,10 @@ bool StartBattle(GameData& data) {
             Sleep(300);
 
             if (data.currentMonster.hp > 0) {
-                data.hp -= 20;
-                AddLog(data, "Goblin counter-attacks! You lost 20 HP.");
+                // 몬스터의 실제 atk 스탯을 사용함
+                int mDmg = data.currentMonster.atk;
+                data.hp -= mDmg;
+                AddLog(data, data.currentMonster.name + " attacks! You lost " + to_string(mDmg) + " HP.");
                 RenderScene(data);
                 Sleep(400);
             }
@@ -210,86 +226,35 @@ bool StartBattle(GameData& data) {
 
 void Looting(GameData& data) {
     LoadingEffect(data, "Searching the remains");
-    for (int i = 0; i < 2; i++) {
-        int r = rand() % 3;
-        string item = (r == 0) ? "Gold" : (r == 1) ? "Potion" : "Old Sword";
-        AddLog(data, "Found: [" + item + "]");
+    for (int i = 0; i < 3; i++) {
+        int r = rand() % 4;
+        string itemName = "";
+        switch (r) {
+        case 0: itemName = "Gold"; data.inventory[0] += (rand() % 50 + 10); break;
+        case 1: itemName = "Potion"; data.inventory[1] += 1; break;
+        case 2: itemName = "Old Sword"; data.inventory[2] += 1; break;
+        case 3: itemName = "Armor Plate"; data.inventory[3] += 1; break;
+        }
+        AddLog(data, "Found: [" + itemName + "]");
         RenderScene(data);
         Sleep(500);
     }
-    cout << " Press any key to continue...";
+    cout << " Inventory updated! Press any key to continue... ";
     system("pause > nul");
 }
 
-// --- [ 포인터 개념 확인 함수 ] ---
-// 
-// 1. 포인터의 기본: 주소, 참조, 역참조 확인
-void practiceBasicPointer() {
-    cout << "=== 1. Basic Pointer Practice ===" << endl;
-    int gold = 500;
-    int* ptr = &gold; // gold의 주소를 ptr에 저장
-
-    cout << "1. 변수 gold의 값: " << gold << endl;
-    cout << "2. 변수 gold의 주소 (&gold): " << &gold << endl;
-    cout << "3. 포인터 ptr이 들고 있는 값 (주소): " << ptr << endl;
-    cout << "4. 포인터로 접근한 값 (*ptr): " << *ptr << endl;
-
-    *ptr = 1000; // 역참조를 통해 원본 값 변경
-    cout << "5. 역참조로 수정한 후 gold의 값: " << gold << endl << endl;
-}
-
-// 2. 포인터 변수 자체의 크기 (자료형과 무관함)
-void practicePointerSize() {
-    cout << "=== 2. Pointer Size Practice ===" << endl;
-    char* cPtr;
-    int* iPtr;
-    double* dPtr;
-    long long* lPtr;
-
-    // 가리키는 대상의 크기 vs 주소값 자체의 크기
-    cout << "char* 크기: " << sizeof(cPtr) << " bytes" << endl;
-    cout << "int* 크기: " << sizeof(iPtr) << " bytes" << endl;
-    cout << "double* 크기: " << sizeof(dPtr) << " bytes" << endl;
-    cout << "long long* 크기: " << sizeof(lPtr) << " bytes" << endl;
-    cout << "=> 어떤 타입이든 '주소'의 크기는 시스템(64/32bit)에 따라 동일함!" << endl << endl;
-}
-
-// 3. 포인터 연산: 주소값이 점프하는 규칙
-void practicePointerArithmetic() {
-    cout << "=== 3. Pointer Arithmetic Practice ===" << endl;
-    int arr[3] = { 10, 20, 30 };
-    int* p = arr; // 배열 이름은 첫 번째 요소의 주소
-
-    cout << "현재 주소 (p): " << p << " | 값: " << *p << endl;
-    cout << "다음 주소 (p+1): " << (p + 1) << " | 값: " << *(p + 1) << endl;
-
-    // 주소값의 차이를 계산 (16진수 계산 확인용)
-    uintptr_t addr1 = (uintptr_t)p;
-    uintptr_t addr2 = (uintptr_t)(p + 1);
-    cout << "주소값 차이: " << addr2 - addr1 << " bytes (sizeof(int)만큼 차이남)" << endl << endl;
-}
-
-// 실습하고 싶은 함수의 주석을 해제하세요.
-//practiceBasicPointer();
-//practicePointerSize();
-//practicePointerArithmetic();
-
-
 int main() {
-/*    HideCursor();
+    HideCursor();
     srand((unsigned int)time(NULL));
 
     GameData player;
-    // 초기 기본 스탯
     player.str = 50; player.dex = 50; player.vit = 100; player.eng = 50;
     player.currentMonster.active = false;
 
-    // 1. 캐릭터 생성 (여기서 이름 설정!)
     CreateCharacter(player);
 
-    // 2. 전투 시작
+    // 루프를 돌려 여러 번 전투할 수 있게 확장 가능
     if (StartBattle(player)) {
-        // 3. 전리품 획득
         Looting(player);
     }
     else {
@@ -299,9 +264,7 @@ int main() {
         cout << " --- GAME OVER ---" << endl;
     }
 
-    SetColor(15);*/
-    practiceBasicPointer();
-    practicePointerSize();
-    practicePointerArithmetic();
+    SetColor(15);
     return 0;
 }
+                                     
