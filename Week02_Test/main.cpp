@@ -280,6 +280,13 @@ void PreviewCriticalDamage(GameData data) {
     cout << "Preview Critical Damage (Call By Value): " << data.atkDmg << '\n';
 }
 
+void PreviewLevelUp(GameData* data) {
+    // Call By Value 예제
+    data.level += 1;
+	cout << "Preview Level Up (Call By Reference): " << data.level << '\n';
+}
+
+
 int main()
 {
     GameData player;
@@ -287,4 +294,8 @@ int main()
     cout << "Damage : " << player.atkDmg << '\n';
     PreviewCriticalDamage(player);
     cout << "Damage : " << player.atkDmg << '\n';
+
+	cout << "Level : " << player.level << '\n';
+	PreviewLevelUp(&player);
+    cout << "Level : " << player.level << '\n';
 }
