@@ -179,6 +179,14 @@ void CreateCharacter(GameData& data) {
     LoadingEffect(data, "Generating Character Data");
 }
 
+int CriticalDamage(GameData& data) {
+    return (int)(data.atkDmg * 2);
+}
+
+void LevelUp_Reference(GameData& data) {
+    data.level += 1;
+}
+
 bool StartBattle(GameData& data) {
     // [랜덤 몬스터 생성 로직]
     string names[] = { "Slime", "Goblin", "Orc", "Skeleton", "Wild Wolf" };
@@ -195,7 +203,7 @@ bool StartBattle(GameData& data) {
 
     while (data.currentMonster.hp > 0 && data.hp > 0) {
         RenderScene(data);
-        SetColor(11); cout << " [Action] 1.Attack : "; cin >> act;
+        SetColor(11); cout << " [Action] 1.Attack  2.Critical Attack : "; cin >> act;
 
         if (act == 1) {
             int d = (int)data.atkDmg;
@@ -203,20 +211,30 @@ bool StartBattle(GameData& data) {
             AddLog(data, "You hit " + data.currentMonster.name + "! (-" + to_string(d) + " damage)");
             RenderScene(data);
             Sleep(300);
+        }
+		else if (act == 2)
+        {
+			int d = CriticalDamage(data);
+            data.currentMonster.hp -= d;
+            AddLog(data, "You hit " + data.currentMonster.name + "! (-" + to_string(d) + " damage)");
+            RenderScene(data);
+            Sleep(300);
+        }
 
-            if (data.currentMonster.hp > 0) {
-                // 몬스터의 실제 atk 스탯을 사용함
-                int mDmg = data.currentMonster.atk;
-                data.hp -= mDmg;
-                AddLog(data, data.currentMonster.name + " attacks! You lost " + to_string(mDmg) + " HP.");
-                RenderScene(data);
-                Sleep(400);
-            }
+        if (data.currentMonster.hp > 0) {
+            // 몬스터의 실제 atk 스탯을 사용함
+            int mDmg = data.currentMonster.atk;
+            data.hp -= mDmg;
+            AddLog(data, data.currentMonster.name + " attacks! You lost " + to_string(mDmg) + " HP.");
+            RenderScene(data);
+            Sleep(400);
         }
     }
 
     if (data.hp > 0) {
         AddLog(data, "Victory! " + data.currentMonster.name + " slain.");
+		LevelUp_Reference(data);
+        AddLog(data, "You leveled up! Current level: " + to_string(data.level));
         data.currentMonster.active = false;
         RenderScene(data);
         return true;
@@ -243,69 +261,28 @@ void Looting(GameData& data) {
     system("pause > nul");
 }
 
-//int main() {
-//    HideCursor();
-//    srand((unsigned int)time(NULL));
-//
-//    GameData player;
-//    player.str = 50; player.dex = 50; player.vit = 100; player.eng = 50;
-//    player.currentMonster.active = false;
-//
-//    CreateCharacter(player);
-//
-//    // 루프를 돌려 여러 번 전투할 수 있게 확장 가능
-//    if (StartBattle(player)) {
-//        Looting(player);
-//    }
-//    else {
-//        SetColor(12);
-//        AddLog(player, "You died...");
-//        RenderScene(player);
-//        cout << " --- GAME OVER ---" << endl;
-//    }
-//
-//    SetColor(15);
-//    return 0;
-//}
-                                     
+int main() {
+    HideCursor();
+    srand((unsigned int)time(NULL));
 
-/*
-// Call By Value vs Call By Address (Reference) 예제
-// 실습 확인용 함수 PreviewCriticalDamage()
-// PreviewLevelUp_Address(), PreviewLevelUp_Reference() 를 구현하고 main()에서 호출하여 결과 확인
-*/
-
-void PreviewCriticalDamage(GameData data) {
-    // Call By Value 예제
-    data.atkDmg *= 2;
-    cout << "Preview Critical Damage (Call By Value): " << data.atkDmg << '\n';
-}
-
-void PreviewLevelUp_Address(GameData* data) {
-    // Call By Value 예제
-    data->level += 1;
-	cout << "Preview Level Up (Call By Address): " << data->level << '\n';
-}
-
-void PreviewLevelUp_Reference(GameData& data) {
-    // Call By Value 예제
-    data.level += 1;
-    cout << "Preview Level Up (Call By Reference): " << data.level << '\n';
-}
-
-int main()
-{
     GameData player;
+    player.str = 50; player.dex = 50; player.vit = 100; player.eng = 50;
+    player.currentMonster.active = false;
 
-    cout << "Damage : " << player.atkDmg << '\n';
-    PreviewCriticalDamage(player);
-    cout << "Damage : " << player.atkDmg << '\n';
-    cout << "===========================" << '\n';
-	cout << "Level : " << player.level << '\n';
-	PreviewLevelUp_Address(&player);
-    cout << "Level : " << player.level << '\n';
-    cout << "===========================" << '\n';
-    cout << "Level : " << player.level << '\n';
-    PreviewLevelUp_Reference(player);
-    cout << "Level : " << player.level << '\n';
+    CreateCharacter(player);
+
+    // 루프를 돌려 여러 번 전투할 수 있게 확장 가능
+    if (StartBattle(player)) {
+        Looting(player);
+    }
+    else {
+        SetColor(12);
+        AddLog(player, "You died...");
+        RenderScene(player);
+        cout << " --- GAME OVER ---" << endl;
+    }
+
+    SetColor(15);
+    return 0;
 }
+
