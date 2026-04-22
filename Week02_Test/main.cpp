@@ -179,6 +179,14 @@ void CreateCharacter(GameData& data) {
     LoadingEffect(data, "Generating Character Data");
 }
 
+int CriticalDamage(GameData& data) {
+    return (int)(data.atkDmg * 2);
+}
+
+void LevelUp_Reference(GameData& data) {
+    data.level += 1;
+}
+
 bool StartBattle(GameData& data) {
     // [랜덤 몬스터 생성 로직]
     string names[] = { "Slime", "Goblin", "Orc", "Skeleton", "Wild Wolf" };
@@ -195,7 +203,7 @@ bool StartBattle(GameData& data) {
 
     while (data.currentMonster.hp > 0 && data.hp > 0) {
         RenderScene(data);
-        SetColor(11); cout << " [Action] 1.Attack : "; cin >> act;
+        SetColor(11); cout << " [Action] 1.Attack  2.Critical Attack : "; cin >> act;
 
         if (act == 1) {
             int d = (int)data.atkDmg;
@@ -203,20 +211,30 @@ bool StartBattle(GameData& data) {
             AddLog(data, "You hit " + data.currentMonster.name + "! (-" + to_string(d) + " damage)");
             RenderScene(data);
             Sleep(300);
+        }
+		else if (act == 2)
+        {
+			int d = CriticalDamage(data);
+            data.currentMonster.hp -= d;
+            AddLog(data, "You hit " + data.currentMonster.name + "! (-" + to_string(d) + " damage)");
+            RenderScene(data);
+            Sleep(300);
+        }
 
-            if (data.currentMonster.hp > 0) {
-                // 몬스터의 실제 atk 스탯을 사용함
-                int mDmg = data.currentMonster.atk;
-                data.hp -= mDmg;
-                AddLog(data, data.currentMonster.name + " attacks! You lost " + to_string(mDmg) + " HP.");
-                RenderScene(data);
-                Sleep(400);
-            }
+        if (data.currentMonster.hp > 0) {
+            // 몬스터의 실제 atk 스탯을 사용함
+            int mDmg = data.currentMonster.atk;
+            data.hp -= mDmg;
+            AddLog(data, data.currentMonster.name + " attacks! You lost " + to_string(mDmg) + " HP.");
+            RenderScene(data);
+            Sleep(400);
         }
     }
 
     if (data.hp > 0) {
         AddLog(data, "Victory! " + data.currentMonster.name + " slain.");
+		LevelUp_Reference(data);
+        AddLog(data, "You leveled up! Current level: " + to_string(data.level));
         data.currentMonster.active = false;
         RenderScene(data);
         return true;
@@ -267,4 +285,4 @@ int main() {
     SetColor(15);
     return 0;
 }
-                                     
+
