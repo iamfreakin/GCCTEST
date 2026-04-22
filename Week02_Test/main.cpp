@@ -270,8 +270,9 @@ void Looting(GameData& data) {
                                      
 
 /*
-// Call By Value vs Call By Referenc
-// 실습 확인용 함수 PreviewCriticalDamage
+// Call By Value vs Call By Address (Reference) 예제
+// 실습 확인용 함수 PreviewCriticalDamage()
+// PreviewLevelUp_Address(), PreviewLevelUp_Reference() 를 구현하고 main()에서 호출하여 결과 확인
 */
 
 void PreviewCriticalDamage(GameData data) {
@@ -280,12 +281,17 @@ void PreviewCriticalDamage(GameData data) {
     cout << "Preview Critical Damage (Call By Value): " << data.atkDmg << '\n';
 }
 
-void PreviewLevelUp(GameData* data) {
+void PreviewLevelUp_Address(GameData* data) {
     // Call By Value 예제
-    data.level += 1;
-	cout << "Preview Level Up (Call By Reference): " << data.level << '\n';
+    data->level += 1;
+	cout << "Preview Level Up (Call By Address): " << data->level << '\n';
 }
 
+void PreviewLevelUp_Reference(GameData& data) {
+    // Call By Value 예제
+    data.level += 1;
+    cout << "Preview Level Up (Call By Reference): " << data.level << '\n';
+}
 
 int main()
 {
@@ -294,8 +300,12 @@ int main()
     cout << "Damage : " << player.atkDmg << '\n';
     PreviewCriticalDamage(player);
     cout << "Damage : " << player.atkDmg << '\n';
-
+    cout << "===========================" << '\n';
 	cout << "Level : " << player.level << '\n';
-	PreviewLevelUp(&player);
+	PreviewLevelUp_Address(&player);
+    cout << "Level : " << player.level << '\n';
+    cout << "===========================" << '\n';
+    cout << "Level : " << player.level << '\n';
+    PreviewLevelUp_Reference(player);
     cout << "Level : " << player.level << '\n';
 }
