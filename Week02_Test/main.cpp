@@ -243,28 +243,48 @@ void Looting(GameData& data) {
     system("pause > nul");
 }
 
-int main() {
-    HideCursor();
-    srand((unsigned int)time(NULL));
-
-    GameData player;
-    player.str = 50; player.dex = 50; player.vit = 100; player.eng = 50;
-    player.currentMonster.active = false;
-
-    CreateCharacter(player);
-
-    // 루프를 돌려 여러 번 전투할 수 있게 확장 가능
-    if (StartBattle(player)) {
-        Looting(player);
-    }
-    else {
-        SetColor(12);
-        AddLog(player, "You died...");
-        RenderScene(player);
-        cout << " --- GAME OVER ---" << endl;
-    }
-
-    SetColor(15);
-    return 0;
-}
+//int main() {
+//    HideCursor();
+//    srand((unsigned int)time(NULL));
+//
+//    GameData player;
+//    player.str = 50; player.dex = 50; player.vit = 100; player.eng = 50;
+//    player.currentMonster.active = false;
+//
+//    CreateCharacter(player);
+//
+//    // 루프를 돌려 여러 번 전투할 수 있게 확장 가능
+//    if (StartBattle(player)) {
+//        Looting(player);
+//    }
+//    else {
+//        SetColor(12);
+//        AddLog(player, "You died...");
+//        RenderScene(player);
+//        cout << " --- GAME OVER ---" << endl;
+//    }
+//
+//    SetColor(15);
+//    return 0;
+//}
                                      
+
+/*
+// Call By Value vs Call By Referenc
+// 실습 확인용 함수 PreviewCriticalDamage
+*/
+
+void PreviewCriticalDamage(GameData data) {
+    // Call By Value 예제
+    data.atkDmg *= 2;
+    cout << "Preview Critical Damage (Call By Value): " << data.atkDmg << '\n';
+}
+
+int main()
+{
+    GameData player;
+
+    cout << "Damage : " << player.atkDmg << '\n';
+    PreviewCriticalDamage(player);
+    cout << "Damage : " << player.atkDmg << '\n';
+}
