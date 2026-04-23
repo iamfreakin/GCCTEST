@@ -8,35 +8,63 @@
 
 using namespace std;
 
-//머지 후 pull 테스트
+// --- [ 1. Monster 클래스 고도화 ] ---
+class Monster {
+private:
+    string name;
+    int hp;
+    int maxHp;
+    int attackDamage;
+    bool active; // 몬스터 출현 여부
 
-// 몬스터 데이터 구조체
-struct MonsterData {
-    string name = "";
-    int hp = 0;
-    int maxHp = 0;
-    int atk = 0;      // [추가] 몬스터 공격력
-    bool active = false;
+public:
+    // 기본 생성자 (비활성 상태로 시작)
+    Monster() : name(""), hp(0), maxHp(0), attackDamage(0), active(false) {}
+
+    // 몬스터 생성(스폰) 함수
+    void Spawn(string n, int h, int a) {
+        name = n;
+        hp = h;
+        maxHp = h;
+        attackDamage = a;
+        active = true;
+    }
+
+    // Getter 함수들 (캡슐화 유지)
+    string GetName() const { return name; }
+    int GetHp() const { return hp; }
+    int GetMaxHp() const { return maxHp; }
+    int GetAtk() const { return attackDamage; }
+    bool IsActive() const { return active; }
+    bool IsAlive() const { return hp > 0; }
+
+    //Setter
+    void SetActive(bool val) { active = val; }
+
+    // 데미지 처리 로직 (내부에서 처리)
+    void TakeDamage(int damage) {
+        hp -= damage;
+        if (hp < 0) hp = 0;
+    }
 };
 
-// 게임 데이터 구조체
+// --- [ 2. GameData 수정 ] ---
 struct GameData {
-    string name = "Unknown";   // 초기값 부여
-    string job = "None";      // 초기값 부여
+    string name = "Unknown";
+    string job = "None";
     int level = 1;
     int maxHp = 100;
-    int hp = 100;             // 초기값 필수!
-    int mp = 0;               // 초기값 필수!
-    float atkSpd = 1.0f;      // 초기값 필수!
-    float atkDmg = 10.0f;     // 초기값 필수!
-    int str = 0;              // 초기값 필수!.
-    int dex = 0;              // 초기값 필수!
-    int vit = 0;              // 초기값 필수!
-    int eng = 0;              // 초기값 필수!
-    bool hardcore = false;    // 초기값 필수!
+    int hp = 100;
+    int mp = 0;
+    float atkSpd = 1.0f;
+    float atkDmg = 10.0f;
+    int str = 0, dex = 0, vit = 0, eng = 0;
+    bool hardcore = false;
     int inventory[4] = { 0, 0, 0, 0 };
     deque<string> logs;
-    MonsterData currentMonster;
+
+    // 기존 struct MonsterData 대신 Monster 클래스 사용
+    Monster currentMonster; 
 };
 
 // --- [ UI 제어 유틸리티 ] ---
@@ -66,34 +94,33 @@ void AddLog(GameData& data, string message) {
 // --- [ 3분할 렌더링 함수 ] ---
 void RenderScene(const GameData& data) {
     MoveCursorToTop();
-    SetColor(8); // 어두운 회색 (테두리)
-
+    SetColor(8); 
     cout << "┌──────────────────────────────┬─────────────────────────────────────────────┬───────────────────────────────────┐" << endl;
     cout << "│      [ ENEMY STATUS ]        │            [ GAME PROGRESS LOG ]            │        [ CHARACTER STATUS ]       │" << endl;
     cout << "├──────────────────────────────┼─────────────────────────────────────────────┼───────────────────────────────────┤" << endl;
 
-    string invStr = "  INV   : G:" + to_string(data.inventory[0]) + " P:" + to_string(data.inventory[1]) +
-        " W:" + to_string(data.inventory[2]) + " A:" + to_string(data.inventory[3]);
+    // 몬스터 객체 참조 (코드를 짧게 만들기 위함)
+    const Monster& m = data.currentMonster;
 
     for (int i = 0; i < 7; i++) {
         SetColor(8); cout << "│";
 
-        // 1. 좌측 영역: 몬스터 (30칸)
-        if (data.currentMonster.active) {
+        // 좌측 영역: Monster 클래스의 메서드 사용
+        if (m.IsActive()) {
             if (i == 1) {
-                SetColor(12); cout << left << setw(30) << ("  NAME : " + data.currentMonster.name);
+                SetColor(12); cout << left << setw(30) << ("  NAME : " + m.GetName());
             }
             else if (i == 2) {
                 SetColor(15); cout << "  HP   : ";
                 SetColor(12);
                 string mBar = "[";
-                int mSeg = (data.currentMonster.maxHp > 0) ? (data.currentMonster.hp * 10) / data.currentMonster.maxHp : 0;
+                int mSeg = (m.GetMaxHp() > 0) ? (m.GetHp() * 10) / m.GetMaxHp() : 0;
                 for (int j = 0; j < 10; j++) mBar += (j < mSeg) ? "#" : "-";
-                mBar += "] " + to_string(data.currentMonster.hp);
+                mBar += "] " + to_string(m.GetHp());
                 cout << left << setw(21) << mBar;
             }
             else if (i == 3) {
-                SetColor(12); cout << left << setw(30) << ("  ATK  : " + to_string(data.currentMonster.atk));
+                SetColor(12); cout << left << setw(30) << ("  ATK  : " + to_string(m.GetAtk()));
             }
             else cout << setw(30) << "";
         }
@@ -112,6 +139,8 @@ void RenderScene(const GameData& data) {
         SetColor(8); cout << "│";
 
         // 3. 우측 영역: 캐릭터 (35칸)
+        string invStr = "  INV   : G:" + to_string(data.inventory[0]) + " P:" + to_string(data.inventory[1]) +
+                " W:" + to_string(data.inventory[2]) + " A:" + to_string(data.inventory[3]);
         SetColor(15);
         if (i == 0) cout << left << setw(35) << ("  NAME  : " + data.name);
         else if (i == 1) cout << left << setw(35) << ("  CLASS : " + data.job + " (Lv." + to_string(data.level) + ")");
@@ -135,7 +164,6 @@ void RenderScene(const GameData& data) {
     cout << "└──────────────────────────────┴─────────────────────────────────────────────┴───────────────────────────────────┘" << endl;
 
     SetColor(15);
-    cout << "                                                                                                    " << endl;
     cout << "                                                                                                    " << endl;
     COORD coord = { 0, 12 };
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
@@ -190,54 +218,40 @@ void LevelUp_Reference(GameData& data) {
 }
 
 bool StartBattle(GameData& data) {
-    // [랜덤 몬스터 생성 로직]
     string names[] = { "Slime", "Goblin", "Orc", "Skeleton", "Wild Wolf" };
-    data.currentMonster.name = names[rand() % 5];
+    
+    // 클래스 메서드를 통한 몬스터 생성
+    data.currentMonster.Spawn(
+        names[rand() % 5], 
+        rand() % 41 + 30, 
+        rand() % 9 + 7
+    );
 
-    // 플레이어가 100 HP일 때 적절한 난이도 (30~70 HP, 7~15 ATK)
-    data.currentMonster.maxHp = rand() % 41 + 30;
-    data.currentMonster.hp = data.currentMonster.maxHp;
-    data.currentMonster.atk = rand() % 9 + 7;
-    data.currentMonster.active = true;
-
-    AddLog(data, "A " + data.currentMonster.name + " appeared from the shadows!");
-    int act;
-
-    while (data.currentMonster.hp > 0 && data.hp > 0) {
+    AddLog(data, "A " + data.currentMonster.GetName() + " appeared!");
+    
+    while (data.currentMonster.IsAlive() && data.hp > 0) {
         RenderScene(data);
-        SetColor(11); cout << " [Action] 1.Attack  2.Critical Attack : "; cin >> act;
+        int act;
+        SetColor(11); cout << " [Action] 1.Attack  2.Critical : "; cin >> act;
 
-        if (act == 1) {
-            int d = (int)data.atkDmg;
-            data.currentMonster.hp -= d;
-            AddLog(data, "You hit " + data.currentMonster.name + "! (-" + to_string(d) + " damage)");
-            RenderScene(data);
-            Sleep(300);
-        }
-		else if (act == 2)
-        {
-			int d = CriticalDamage(data);
-            data.currentMonster.hp -= d;
-            AddLog(data, "You hit " + data.currentMonster.name + "! (-" + to_string(d) + " damage)");
-            RenderScene(data);
-            Sleep(300);
-        }
-
-        if (data.currentMonster.hp > 0) {
-            // 몬스터의 실제 atk 스탯을 사용함
-            int mDmg = data.currentMonster.atk;
+        int d = (act == 2) ? (int)(data.atkDmg * 2) : (int)data.atkDmg;
+        
+        // 몬스터에게 데미지 전달 (직접 수정 X, 메서드 호출 O)
+        data.currentMonster.TakeDamage(d);
+        AddLog(data, "You hit " + data.currentMonster.GetName() + "! (-" + to_string(d) + ")");
+        
+        if (data.currentMonster.IsAlive()) {
+            int mDmg = data.currentMonster.GetAtk();
             data.hp -= mDmg;
-            AddLog(data, data.currentMonster.name + " attacks! You lost " + to_string(mDmg) + " HP.");
-            RenderScene(data);
-            Sleep(400);
+            AddLog(data, data.currentMonster.GetName() + " attacks! You lost " + to_string(mDmg) + " HP.");
         }
+        Sleep(400);
     }
 
     if (data.hp > 0) {
-        AddLog(data, "Victory! " + data.currentMonster.name + " slain.");
-		LevelUp_Reference(data);
-        AddLog(data, "You leveled up! Current level: " + to_string(data.level));
-        data.currentMonster.active = false;
+        AddLog(data, "Victory! " + data.currentMonster.GetName() + " slain.");
+        data.level++;
+        data.currentMonster.SetActive(false); // 전투 종료 후 비활성화
         RenderScene(data);
         return true;
     }
@@ -264,26 +278,39 @@ void Looting(GameData& data) {
 }
 
 int main() {
+    // [1] 시스템 초기화
     HideCursor();
-    srand((unsigned int)time(NULL));
+    srand(static_cast<unsigned int>(time(NULL)));
 
+    // [2] 플레이어 데이터 초기 설정
     GameData player;
-    player.str = 50; player.dex = 50; player.vit = 100; player.eng = 50;
-    player.currentMonster.active = false;
+    player.str = 50; 
+    player.dex = 50; 
+    player.vit = 100; 
+    player.eng = 50;
+    // player.currentMonster.active = false; -> Monster 클래스 생성자에서 이미 처리됨 (삭제)
 
+    // [3] 캐릭터 생성 단계
     CreateCharacter(player);
 
-    // 루프를 돌려 여러 번 전투할 수 있게 확장 가능
-    if (StartBattle(player)) {
+    // [4] 메인 게임 시나리오 진행 (전투 및 결과)
+    // 기능을 변경하지 않기 위해 단판 승부 구조 유지
+    bool isVictory = StartBattle(player);
+
+    if (isVictory) {
+        // 전투 승리 시 루팅 진행
         Looting(player);
     }
     else {
-        SetColor(12);
+        // 전투 패배 시 사망 연출 및 종료 처리
+        SetColor(12); // 빨간색
         AddLog(player, "You died...");
         RenderScene(player);
-        cout << " --- GAME OVER ---" << endl;
+        
+        cout << "\n" << setw(60) << " [ SYSTEM ] --- GAME OVER --- " << endl;
     }
 
+    // [5] 시스템 종료 전 정리 (색상 복구)
     SetColor(15);
     return 0;
 }
