@@ -126,6 +126,7 @@
       <workItem from="1776844969725" duration="92000" />
       <workItem from="1776845439341" duration="511000" />
       <workItem from="1776907853116" duration="45000" />
+      <workItem from="1776930959000" duration="1956000" />
     </task>
     <task id="LOCAL-00001" summary="feat: 머지 후 pull 테스트">
       <option name="closed" value="true" />
@@ -135,7 +136,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776909990854</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat: 몬스터 클레스 코드 리펙토링">
+      <option name="closed" value="true" />
+      <created>1776931272355</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1776931272355</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,7 +166,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="feat: 머지 후 pull 테스트" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: 머지 후 pull 테스트" />
+    <MESSAGE value="feat: 몬스터 클레스 코드 리펙토링" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: 몬스터 클레스 코드 리펙토링" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -174,11 +184,6 @@
           <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="3" />
         </breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/main.cpp</url>
-          <line>316</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
