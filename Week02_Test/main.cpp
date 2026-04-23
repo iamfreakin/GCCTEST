@@ -27,7 +27,7 @@ struct GameData {
     int mp = 0;               // 초기값 필수!
     float atkSpd = 1.0f;      // 초기값 필수!
     float atkDmg = 10.0f;     // 초기값 필수!
-    int str = 0;              // 초기값 필수!
+    int str = 0;              // 초기값 필수!.
     int dex = 0;              // 초기값 필수!
     int vit = 0;              // 초기값 필수!
     int eng = 0;              // 초기값 필수!
