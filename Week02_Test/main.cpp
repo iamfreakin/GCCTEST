@@ -8,6 +8,8 @@
 
 using namespace std;
 
+//머지 후 pull 테스트
+
 // 몬스터 데이터 구조체
 struct MonsterData {
     string name = "";
