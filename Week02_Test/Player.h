@@ -1,34 +1,27 @@
 #pragma once
-#include <string>
+#include "Character.h" // 부모 클래스 포함
 
-using std::string;
-
-class Player {
+class Player : public Character {
 private:
-    string name, job;
-    int level, hp, maxHp;
-    int str, dex, vit, eng;
-    float atkDmg, atkSpd;
-    int inventory[4]; 
+    // Player만이 가지는 고유 데이터
+    std::string job;
+    int inventory[5]; // 이미지 설계에 맞춰 5칸으로 확장
+    int exp;
+    int expToNextLevel;
 
 public:
     Player();
 
-    void Initialize(string n, int jobChoice);
-    void TakeDamage(int dmg);
+    // Player 고유 기능
+    void Initialize(std::string n, int jobChoice);
     void LevelUp();
     void AddItem(int type, int amount);
-
-    string GetName() const { return name; }
-    string GetJobName() const { return job; }
-    int GetLevel() const { return level; }
-    int GetHp() const { return hp; }
-    int GetMaxHp() const { return maxHp; }
-    int GetStr() const { return str; }
-    int GetDex() const { return dex; }
-    int GetVit() const { return vit; }
+    void GainExp(int amount);
+    
+    // Player 고용 Getter
+    std::string GetJobName() const { return job; }
     int GetInvItem(int idx) const { return inventory[idx]; }
-    float GetAtkDmg() const { return atkDmg; }
-    float GetAtkSpd() const { return atkSpd; }
-    bool IsAlive() const { return hp > 0; }
+    int GetExp() const { return exp; }
+    int GetExpToNextLevel() const { return expToNextLevel; }
+    
 };

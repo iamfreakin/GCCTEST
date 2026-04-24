@@ -1,29 +1,20 @@
 #pragma once
-#include <string>
+#include "Character.h"
 
-using std::string;
-
-
-class Monster
-{
+class Monster : public Character {
 private:
-    string name;
-    int hp;
-    int maxHp;
-    int attackDamage;
     bool active;
+    int expReward;
+
 public:
+    // 생성자: 부모 생성자를 호출하여 초기화
     Monster();
+    
+    void Spawn(std::string n, int h, int a, int xp); 
 
-    void Spawn(string n, int h, int a); 
-
-    string GetName() const { return name; }
-    int GetHp() const { return hp; }
-    int GetMaxHp() const { return maxHp; }
-    int GetAtk() const { return attackDamage; }
+    // Monster 고유 Getter 및 Setter
+    int GetExpReward() const { return expReward; }
     bool IsActive() const { return active; }
-    bool IsAlive() const { return hp > 0; }
     void SetActive(bool val) { active = val; }
-
-    void TakeDamage(int damage);
+    
 };

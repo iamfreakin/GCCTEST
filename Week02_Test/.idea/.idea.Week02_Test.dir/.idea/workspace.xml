@@ -14,18 +14,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9cd8b4b-d875-4a84-885d-24326dd99dcf" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/ConsoleSystem.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GameData.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GameData.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GameRenderer.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GameplayManager.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Monster.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Monster.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Player.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Player.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Character.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Character.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Week02_Test.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Week02_Test.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GameData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/GameData.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GameRenderer.h" beforeDir="false" afterPath="$PROJECT_DIR$/GameRenderer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GameplayManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/GameplayManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Monster.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Monster.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Monster.h" beforeDir="false" afterPath="$PROJECT_DIR$/Monster.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Player.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Player.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Player.h" beforeDir="false" afterPath="$PROJECT_DIR$/Player.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Week02_Test.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Week02_Test.vcxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +55,9 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="cidr-memory-view://0" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Character.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Character.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ConsoleSystem.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/GameData.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/GameData.h" root0="FORCE_HIGHLIGHTING" />
@@ -150,7 +152,7 @@
       <workItem from="1776907853116" duration="45000" />
       <workItem from="1776930959000" duration="2764000" />
       <workItem from="1776933877574" duration="1926000" />
-      <workItem from="1776996109131" duration="5666000" />
+      <workItem from="1776996109131" duration="12204000" />
     </task>
     <task id="LOCAL-00001" summary="feat: 머지 후 pull 테스트">
       <option name="closed" value="true" />
@@ -176,7 +178,23 @@
       <option name="project" value="LOCAL" />
       <updated>1776933247222</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="변경refactor: OOP 기반 모듈화 및 컴파일 최적화&#10;&#10;- 객체지향 리팩토링: struct 기반 데이터를 class로 전환하고 Getter/Setter를 통해 데이터 무결성 확보&#10;- 모듈 분리: GameplayManager, GameRenderer, ConsoleSystem을 정적 클래스로 분리하여 관심사 분리(SoC) 실현&#10;- 코드 클린업: 헤더 내 using namespace std 제거 및 std:: 접두어 명시로 네임스페이스 오염 방지">
+      <option name="closed" value="true" />
+      <created>1777005334099</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1777005334099</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fix: 콘솔 UI 잔상 제거 및 부분 버퍼 클리어 기능 구현">
+      <option name="closed" value="true" />
+      <created>1777005932969</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1777005932969</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -200,7 +218,9 @@
     <MESSAGE value="feat: 머지 후 pull 테스트" />
     <MESSAGE value="feat: 몬스터 클레스 코드 리펙토링" />
     <MESSAGE value="Refactor: Convert GameData struct to class and implement Player class&#10;&#10;- GameData 구조체를 클래스로 전환 및 캡슐화&#10;- 플레이어의 스탯과 로직을 담당하는 Player 클래스 구현&#10;- 직접적인 멤버 변수 접근을 Getter/Setter 메서드 호출 방식으로 변경&#10;- 데이터 무결성 확보 및 코드 가독성 개선" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor: Convert GameData struct to class and implement Player class&#10;&#10;- GameData 구조체를 클래스로 전환 및 캡슐화&#10;- 플레이어의 스탯과 로직을 담당하는 Player 클래스 구현&#10;- 직접적인 멤버 변수 접근을 Getter/Setter 메서드 호출 방식으로 변경&#10;- 데이터 무결성 확보 및 코드 가독성 개선" />
+    <MESSAGE value="변경refactor: OOP 기반 모듈화 및 컴파일 최적화&#10;&#10;- 객체지향 리팩토링: struct 기반 데이터를 class로 전환하고 Getter/Setter를 통해 데이터 무결성 확보&#10;- 모듈 분리: GameplayManager, GameRenderer, ConsoleSystem을 정적 클래스로 분리하여 관심사 분리(SoC) 실현&#10;- 코드 클린업: 헤더 내 using namespace std 제거 및 std:: 접두어 명시로 네임스페이스 오염 방지" />
+    <MESSAGE value="fix: 콘솔 UI 잔상 제거 및 부분 버퍼 클리어 기능 구현" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: 콘솔 UI 잔상 제거 및 부분 버퍼 클리어 기능 구현" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

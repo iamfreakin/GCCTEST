@@ -17,80 +17,106 @@ using std::left;
 class GameRenderer
 {
 public:
-    static void RenderScene(const GameData& data) 
+   static void RenderScene(const GameData& data) 
+{
+    ConsoleSystem::MoveCursorToTop();
+    ConsoleSystem::SetColor(8); 
+    std::cout << "┌──────────────────────────────┬─────────────────────────────────────────────┬───────────────────────────────────┐" << std::endl;
+    std::cout << "│      [ ENEMY STATUS ]        │            [ GAME PROGRESS LOG ]            │        [ CHARACTER STATUS ]       │" << std::endl;
+    std::cout << "├──────────────────────────────┼─────────────────────────────────────────────┼───────────────────────────────────┤" << std::endl;
+
+    const Monster& m = data.GetMonster();
+    const Player& p = data.GetPlayer();
+    const auto& logs = data.GetLogs();
+
+    // 정보량이 많아졌으므로 루프를 9번으로 늘려 출력 공간 확보
+    for (int i = 0; i < 9; i++) 
     {
-        ConsoleSystem::MoveCursorToTop();
-        ConsoleSystem::SetColor(8); 
-        cout << "┌──────────────────────────────┬─────────────────────────────────────────────┬───────────────────────────────────┐" << endl;
-        cout << "│      [ ENEMY STATUS ]        │            [ GAME PROGRESS LOG ]            │        [ CHARACTER STATUS ]       │" << endl;
-        cout << "├──────────────────────────────┼─────────────────────────────────────────────┼───────────────────────────────────┤" << endl;
+        ConsoleSystem::SetColor(8); std::cout << "│";
 
-        const Monster& m = data.GetMonster();
-        const Player& p = data.GetPlayer();
-        const auto& logs = data.GetLogs();
-
-        for (int i = 0; i < 7; i++) 
-        {
-            ConsoleSystem::SetColor(8); cout << "│";
-
-            // 1. 좌측 (Monster)
-            if (m.IsActive()) {
-                if (i == 1) { ConsoleSystem::SetColor(12); cout << left << setw(30) << ("  NAME : " + m.GetName()); }
-                else if (i == 2) {
-                    ConsoleSystem::SetColor(15); cout << "  HP   : ";
-                    ConsoleSystem::SetColor(12);
-                    string mBar = "[";
-                    int mSeg = (m.GetMaxHp() > 0) ? (m.GetHp() * 10) / m.GetMaxHp() : 0;
-                    for (int j = 0; j < 10; j++) mBar += (j < mSeg) ? "#" : "-";
-                    mBar += "] " + to_string(m.GetHp());
-                    cout << left << setw(21) << mBar;
-                }
-                else if (i == 3) { ConsoleSystem::SetColor(12); cout << left << setw(30) << ("  ATK  : " + to_string(m.GetAtk())); }
-                else cout << setw(30) << "";
-            } else cout << setw(30) << "";
-
-            ConsoleSystem::SetColor(8); cout << "│";
-
-            // 2. 중앙 (Logs)
-            string dLog = (i < logs.size()) ? " > " + logs[i] : "";
-            if (dLog.find("damage") != string::npos || dLog.find("lost") != string::npos) ConsoleSystem::SetColor(12);
-            else if (dLog.find("Victory") != string::npos || dLog.find("Found") != string::npos) ConsoleSystem::SetColor(10);
-            else ConsoleSystem::SetColor(15);
-            cout << left << setw(45) << dLog;
-
-            ConsoleSystem::SetColor(8); cout << "│";
-
-            // 3. 우측 (Player)
-            string invStr = "  INV   : G:" + to_string(p.GetInvItem(0)) + " P:" + to_string(p.GetInvItem(1)) +
-                    " W:" + to_string(p.GetInvItem(2)) + " A:" + to_string(p.GetInvItem(3));
-            ConsoleSystem::SetColor(15);
-            if (i == 0) cout << left << setw(35) << ("  NAME  : " + p.GetName());
-            else if (i == 1) cout << left << setw(35) << ("  CLASS : " + p.GetJobName() + " (Lv." + to_string(p.GetLevel()) + ")");
+        // 1. 좌측 (Monster Status)
+        if (m.IsActive() && i < 4) {
+            if (i == 1) { ConsoleSystem::SetColor(12); std::cout << std::left << std::setw(30) << ("  NAME : " + m.GetName()); }
             else if (i == 2) {
-                cout << "  HP    : ";
-                float hpP = (float)p.GetHp() / p.GetMaxHp();
-                if (hpP > 0.7) ConsoleSystem::SetColor(10); else if (hpP > 0.3) ConsoleSystem::SetColor(14); else ConsoleSystem::SetColor(12);
-                string hBar = "[";
-                int hSeg = (p.GetMaxHp() > 0) ? (p.GetHp() * 10) / p.GetMaxHp() : 0;
-                for (int j = 0; j < 10; j++) hBar += (j < hSeg) ? "#" : "-";
-                hBar += "] " + to_string(p.GetHp());
-                cout << left << setw(25) << hBar;
+                ConsoleSystem::SetColor(15); std::cout << "  HP   : ";
+                ConsoleSystem::SetColor(12);
+                std::string mBar = "[";
+                int mSeg = (m.GetMaxHp() > 0) ? (m.GetHp() * 10) / m.GetMaxHp() : 0;
+                for (int j = 0; j < 10; j++) mBar += (j < mSeg) ? "#" : "-";
+                mBar += "] " + std::to_string(m.GetHp());
+                std::cout << std::left << std::setw(21) << mBar;
             }
-            else if (i == 3) { ConsoleSystem::SetColor(15); cout << left << setw(35) << ("  ATK   : " + to_string((int)p.GetAtkDmg()) + " / SPD: " + to_string(p.GetAtkSpd()).substr(0, 3)); }
-            else if (i == 4) { ConsoleSystem::SetColor(15); cout << left << setw(35) << ("  STATS : S:" + to_string(p.GetStr()) + " D:" + to_string(p.GetDex()) + " V:" + to_string(p.GetVit())); }
-            else if (i == 5) { ConsoleSystem::SetColor(14); cout << left << setw(35) << invStr; }
-            else { ConsoleSystem::SetColor(15); cout << left << setw(35) << ("  MODE  : " + string(data.IsHardcore() ? "HARDCORE" : "STANDARD")); }
+            else if (i == 3) { ConsoleSystem::SetColor(12); std::cout << std::left << std::setw(30) << ("  ATK  : " + std::to_string((int)m.GetAttackDamage())); }
+            else std::cout << std::setw(30) << "";
+        } else std::cout << std::setw(30) << "";
 
-            ConsoleSystem::SetColor(8); cout << "│" << endl;
+        ConsoleSystem::SetColor(8); std::cout << "│";
+
+        // 2. 중앙 (Game Logs)
+        std::string dLog = (i < logs.size()) ? " > " + logs[i] : "";
+        if (dLog.find("Victory") != std::string::npos || dLog.find("Level Up") != std::string::npos) ConsoleSystem::SetColor(10);
+        else if (dLog.find("lost") != std::string::npos || dLog.find("died") != std::string::npos) ConsoleSystem::SetColor(12);
+        else ConsoleSystem::SetColor(15);
+        std::cout << std::left << std::setw(45) << dLog;
+
+        ConsoleSystem::SetColor(8); std::cout << "│";
+
+        // 3. 우측 (Player Status)
+        ConsoleSystem::SetColor(15);
+        if (i == 0) std::cout << std::left << std::setw(35) << ("  NAME  : " + p.GetName() + " (Lv." + std::to_string(p.GetLevel()) + ")");
+        else if (i == 1) std::cout << std::left << std::setw(35) << ("  CLASS : " + p.GetJobName());
+        else if (i == 2) { // HP Bar
+            std::cout << "  HP    : ";
+            float hpP = (float)p.GetHp() / p.GetMaxHp();
+            if (hpP > 0.7) ConsoleSystem::SetColor(10); else if (hpP > 0.3) ConsoleSystem::SetColor(14); else ConsoleSystem::SetColor(12);
+            std::string hBar = "[";
+            int hSeg = (p.GetMaxHp() > 0) ? (p.GetHp() * 10) / p.GetMaxHp() : 0;
+            for (int j = 0; j < 10; j++) hBar += (j < hSeg) ? "#" : "-";
+            hBar += "] " + std::to_string(p.GetHp());
+            std::cout << std::left << std::setw(25) << hBar;
         }
-        cout << "└──────────────────────────────┴─────────────────────────────────────────────┴───────────────────────────────────┘" << endl;
-    }
+        else if (i == 3) { // MP Bar 추가
+            ConsoleSystem::SetColor(15); std::cout << "  MP    : ";
+            ConsoleSystem::SetColor(11); // Cyan
+            std::string mpBar = "[";
+            int mpSeg = (p.GetMaxMp() > 0) ? (p.GetMp() * 10) / p.GetMaxMp() : 0;
+            for (int j = 0; j < 10; j++) mpBar += (j < mpSeg) ? "#" : "-";
+            mpBar += "] " + std::to_string(p.GetMp());
+            std::cout << std::left << std::setw(25) << mpBar;
+        }
+        else if (i == 4) { // XP Bar 추가
+            ConsoleSystem::SetColor(15); std::cout << "  XP    : ";
+            ConsoleSystem::SetColor(14); // Yellow
+            std::string xBar = "[";
+            int targetExp = p.GetExpToNextLevel();
+            int xSeg = (targetExp > 0) ? (p.GetExp() * 10) / p.GetExpToNextLevel() : 0;
+            for (int j = 0; j < 10; j++) xBar += (j < xSeg) ? "#" : "-";
+            xBar += "] " + std::to_string(p.GetExp());
+            std::cout << std::left << std::setw(25) << xBar;
+        }
+        else if (i == 5) { ConsoleSystem::SetColor(15); std::cout << std::left << std::setw(35) << ("  ATK   : " + std::to_string((int)p.GetAttackDamage()) + " / SPD: " + std::to_string(p.GetAttackSpeed()).substr(0, 4)); }
+        else if (i == 6) { ConsoleSystem::SetColor(15); std::cout << std::left << std::setw(35) << ("  STATS : S:" + std::to_string(p.GetStrength()) + " D:" + std::to_string(p.GetDexterity()) + " V:" + std::to_string(p.GetVitality()) + " E:" + std::to_string(p.GetEnergy())); }
+        else if (i == 7) { 
+            ConsoleSystem::SetColor(14); // Gold
+            std::string inv = "  INV   : G:" + std::to_string(p.GetInvItem(0)) + " P:" + std::to_string(p.GetInvItem(1)) + " W:" + std::to_string(p.GetInvItem(2)) + " A:" + std::to_string(p.GetInvItem(3));
+            std::cout << std::left << std::setw(35) << inv; 
+        }
+        else { 
+            ConsoleSystem::SetColor(8); 
+            std::string mode = data.IsHardcore() ? "HARDCORE" : "STANDARD";
+            std::cout << std::left << std::setw(35) << ("  MODE  : " + mode + " / Res: F" + std::to_string(p.GetFireResist())); 
+        }
 
-    static void LoadingEffect(GameData& data, string message) 
+        ConsoleSystem::SetColor(8); std::cout << "│" << std::endl;
+    }
+    std::cout << "└──────────────────────────────┴─────────────────────────────────────────────┴───────────────────────────────────┘" << std::endl;
+}
+
+    static void LoadingEffect(GameData& data, string message, int time = 300) 
         {
             for (int i = 0; i < 3; i++) {
                 RenderScene(data);
-                ConsoleSystem::ClearLine(0, 11, 100);
+                ConsoleSystem::ClearLine(0, 13, 100);
                 ConsoleSystem::SetColor(14);
                 cout << " [System] " << message;
                 for (int j = 0; j <= i; j++) cout << ".";

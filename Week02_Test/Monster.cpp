@@ -1,17 +1,15 @@
 #include "Monster.h"
 
-Monster::Monster() : name(""), hp(0), maxHp(0), attackDamage(0), active(false) {}
+Monster::Monster() : Character("", 0, 0, 0, 0, 1), active(false), expReward(0) {}
 
-void Monster::Spawn(string n, int h, int a)
+void Monster::Spawn(std::string n, int h, int a, int xp)
 {
     name = n;
     hp = h;
     maxHp = h;
-    attackDamage = a;
+    attackDamage = static_cast<float>(a);
+    
+    // Monster 고유 정보 설정
+    expReward = xp;
     active = true;
-}
-
-void Monster::TakeDamage(int damage) 
-{
-    hp = std::max(0, hp - damage);
 }
