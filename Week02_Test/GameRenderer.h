@@ -90,6 +90,7 @@ public:
         {
             for (int i = 0; i < 3; i++) {
                 RenderScene(data);
+                ConsoleSystem::ClearLine(0, 11, 100);
                 ConsoleSystem::SetColor(14);
                 cout << " [System] " << message;
                 for (int j = 0; j <= i; j++) cout << ".";

@@ -35,27 +35,31 @@ public:
 }
 
 static bool StartBattle(GameData& data) {
-    string names[] = { "Slime", "Goblin", "Orc", "Skeleton", "Wild Wolf" };
-    data.GetMonster().Spawn(names[rand() % 5], rand() % 41 + 30, rand() % 9 + 7);
+        std::string names[] = { "Slime", "Goblin", "Orc", "Skeleton", "Wild Wolf" };
+        data.GetMonster().Spawn(names[rand() % 5], rand() % 41 + 30, rand() % 9 + 7);
 
-    data.AddLog("A " + data.GetMonster().GetName() + " appeared!");
+        data.AddLog("A " + data.GetMonster().GetName() + " appeared!");
     
-    while (data.GetMonster().IsAlive() && data.GetPlayer().IsAlive()) {
-        GameRenderer::RenderScene(data);
-        int act;
-        ConsoleSystem::SetColor(11); cout << " [Action] 1.Attack  2.Critical : "; cin >> act;
+        while (data.GetMonster().IsAlive() && data.GetPlayer().IsAlive()) {
+            GameRenderer::RenderScene(data);
+            ConsoleSystem::ClearLine(0, 11, 100);
+            int act;
+            ConsoleSystem::SetColor(11); std::cout << " [Action] 1.Attack  2.Critical : "; std::cin >> act;
 
-        int d = (act == 2) ? (int)(data.GetPlayer().GetAtkDmg() * 2) : (int)data.GetPlayer().GetAtkDmg();
-        data.GetMonster().TakeDamage(d);
-        data.AddLog("You hit " + data.GetMonster().GetName() + "! (-" + std::to_string(d) + ")");
+            std::string attackMsg = (act == 2) ? "Concentrating for Critical Hit" : "Swinging your weapon";
+            GameRenderer::LoadingEffect(data, attackMsg); 
+            // --------------------------------
+            int d = (act == 2) ? (int)(data.GetPlayer().GetAtkDmg() * 2) : (int)data.GetPlayer().GetAtkDmg();
+            data.GetMonster().TakeDamage(d);
+            data.AddLog("You hit " + data.GetMonster().GetName() + "! (-" + std::to_string(d) + ")");
         
-        if (data.GetMonster().IsAlive()) {
-            int mDmg = data.GetMonster().GetAtk();
-            data.GetPlayer().TakeDamage(mDmg);
-            data.AddLog(data.GetMonster().GetName() + " attacks! You lost " + std::to_string(mDmg) + " HP.");
+            if (data.GetMonster().IsAlive()) {
+                int mDmg = data.GetMonster().GetAtk();
+                data.GetPlayer().TakeDamage(mDmg);
+                data.AddLog(data.GetMonster().GetName() + " attacks! You lost " + std::to_string(mDmg) + " HP.");
+            }
+            Sleep(400);
         }
-        Sleep(400);
-    }
 
     if (data.GetPlayer().IsAlive()) {
         data.AddLog("Victory! " + data.GetMonster().GetName() + " slain.");
