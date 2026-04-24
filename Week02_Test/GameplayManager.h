@@ -1,0 +1,89 @@
+﻿#pragma once
+
+#include <iostream>
+#include <string>
+
+#include "GameData.h"
+#include "GameRenderer.h"
+#include "ConsoleSystem.h"
+
+using std::string;
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+class GameplayManager
+{
+public:
+    static void CreateCharacter(GameData& data) {
+    string n; int c; char hc;
+    system("cls");
+    ConsoleSystem::SetColor(11);
+    cout << "┌────────────────────────────────────────────────────────────┐" << endl;
+    cout << "│                [ CHARACTER CREATION ]                      │" << endl;
+    cout << "└────────────────────────────────────────────────────────────┘" << endl;
+    ConsoleSystem::SetColor(15);
+    cout << " > Input your name : "; cin >> n;
+    cout << "\n > (1)Warrior (2)Rogue (3)Sorcerer / Choice: "; cin >> c;
+    cout << " > Enable Hardcore Mode? (1)Yes (0)No : "; cin >> hc;
+    
+    data.SetHardcore(hc == '1');
+    data.GetPlayer().Initialize(n, c);
+    data.AddLog("Welcome, " + data.GetPlayer().GetName() + ". Your journey begins.");
+    GameRenderer::LoadingEffect(data, "Generating Character Data");
+}
+
+static bool StartBattle(GameData& data) {
+    string names[] = { "Slime", "Goblin", "Orc", "Skeleton", "Wild Wolf" };
+    data.GetMonster().Spawn(names[rand() % 5], rand() % 41 + 30, rand() % 9 + 7);
+
+    data.AddLog("A " + data.GetMonster().GetName() + " appeared!");
+    
+    while (data.GetMonster().IsAlive() && data.GetPlayer().IsAlive()) {
+        GameRenderer::RenderScene(data);
+        int act;
+        ConsoleSystem::SetColor(11); cout << " [Action] 1.Attack  2.Critical : "; cin >> act;
+
+        int d = (act == 2) ? (int)(data.GetPlayer().GetAtkDmg() * 2) : (int)data.GetPlayer().GetAtkDmg();
+        data.GetMonster().TakeDamage(d);
+        data.AddLog("You hit " + data.GetMonster().GetName() + "! (-" + std::to_string(d) + ")");
+        
+        if (data.GetMonster().IsAlive()) {
+            int mDmg = data.GetMonster().GetAtk();
+            data.GetPlayer().TakeDamage(mDmg);
+            data.AddLog(data.GetMonster().GetName() + " attacks! You lost " + std::to_string(mDmg) + " HP.");
+        }
+        Sleep(400);
+    }
+
+    if (data.GetPlayer().IsAlive()) {
+        data.AddLog("Victory! " + data.GetMonster().GetName() + " slain.");
+        data.GetPlayer().LevelUp();
+        data.GetMonster().SetActive(false);
+        GameRenderer::RenderScene(data);
+        return true;
+    }
+    return false;
+}
+
+static void Looting(GameData& data) {
+    GameRenderer::LoadingEffect(data, "Searching the remains");
+    for (int i = 0; i < 3; i++) {
+        int r = rand() % 4;
+        string itemName = "";
+        switch (r) {
+            case 0: itemName = "Gold"; data.GetPlayer().AddItem(0, (rand() % 50 + 10)); break;
+            case 1: itemName = "Potion"; data.GetPlayer().AddItem(1, 1); break;
+            case 2: itemName = "Old Sword"; data.GetPlayer().AddItem(2, 1); break;
+            case 3: itemName = "Armor Plate"; data.GetPlayer().AddItem(3, 1); break;
+        }
+        data.AddLog("Found: [" + itemName + "]");
+        GameRenderer::RenderScene(data);
+        Sleep(500);
+    }
+    cout << " Inventory updated! Press any key to continue... ";
+    system("pause > nul");
+}
+    
+};

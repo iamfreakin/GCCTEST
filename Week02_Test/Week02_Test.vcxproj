@@ -19,7 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameData.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="Player.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ConsoleSystem.h" />
+    <ClInclude Include="GameData.h" />
+    <ClInclude Include="GameplayManager.h" />
+    <ClInclude Include="GameRenderer.h" />
+    <ClInclude Include="Monster.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
