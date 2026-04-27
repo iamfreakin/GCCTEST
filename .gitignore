@@ -1,0 +1,22 @@
+# Visual Studio 임시 파일 및 폴더
+.vs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+*.user
+*.aps
+*.opendb
+*.pdb
+*.idb
+*.tlog
+*.lastbuildstate
+*.recipe
+*.obj
+*.log
+
+# 빌드 결과물
+*.exe
+*.dll
+*.lib
+*.sln.dotsettings.user
