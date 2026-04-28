@@ -3,7 +3,6 @@
 #include <vector>
 #include "Character.h"
 using namespace std;
-#include "Item.h"
 
 // Character 클래스를 상속 받은 Player 클래스
 class Player : public Character
@@ -18,11 +17,13 @@ private:
 	int exp, expToNextLevel;
 	
 	// 인벤토리
-	vector<Item> inventory;
+	vector<int> inventory;
 	
 public:
 	// 생성자
 	Player(const string& name, const string& characterClass, bool isHardcore);
+	// 소멸자
+	virtual ~Player();
 	
 protected:
 	// 자식 클래스(바바리안, 소서리스 등)이 스탯을 직접 지정할때 사용되는 생성자
@@ -43,6 +44,5 @@ public:
 	void GainExp(int amount);
 	void PreviewCritical() const;
 	void PrintLevel() const;
-	void AddItem(const Item& item);
 	void Loot(int count = 3); // 빈 슬롯부터 count개의 아이템 획득 -> 인벤토리에 저장 + 출력
 };

@@ -3,7 +3,7 @@
 #include <cstdlib> 
 #include <iomanip>
 #include <vector>
-
+#include <memory>
 #include "Barbarian.h"
 #include "Battle.h"
 #include "FireGoblin.h"
@@ -92,10 +92,10 @@ int main()
 	system("cls");   // 화면 지우기
 
 	// Player 직업에따라 자식 클래스를 생성
-	Player* playerPtr = nullptr;
-	if (classChoiceInput == 3) playerPtr = new Barbarian(userName, isHardcore);
-	else if (classChoiceInput == 7) playerPtr = new Sorceress(userName, isHardcore);
-	else playerPtr = new Player(userName, charactorClass, isHardcore);
+	unique_ptr<Player> playerPtr;
+	if (classChoiceInput == 3) playerPtr = make_unique<Barbarian>(userName, isHardcore);
+	else if (classChoiceInput == 7) playerPtr = make_unique<Sorceress>(userName, isHardcore);
+	else playerPtr = make_unique<Player>(userName, charactorClass, isHardcore);
 	Player& player = *playerPtr;
 	
 	// 2. 캐릭터 상태창 UI
@@ -131,47 +131,15 @@ int main()
 
 	// 3. 전투 시스템 UI
 	int pendingExp = 0;
-	vector<Monster*> GoblinMap = {
-		new Monster("Goblin", 50, 0 ,15 ,0 ,50),
-		new Monster("Goblin", 50, 0 ,15 ,0 ,50),
-		new Monster("Goblin", 50, 0 ,15 ,0 ,50),
-		new Monster("Goblin", 50, 0 ,15 ,0 ,50),
-	};
-	vector<Monster*> SkeletonMap = {
-		new Monster("Skeleton", 60, 0 ,20 ,0 ,50),
-		new Monster("Skeleton", 60, 0 ,20 ,0 ,50),
-		new Monster("Skeleton", 60, 0 ,20 ,0 ,50),
-		new Monster("Skeleton", 60, 0 ,20 ,0 ,50),
-		
-	};
-	vector<Monster*> GhoulMap = {
-		new Monster("Ghoul", 70, 0 ,35 ,0 ,120),
-		new Monster("Ghoul", 70, 0 ,35 ,0 ,120),
-		new Monster("Ghoul", 70, 0 ,35 ,0 ,120),
-		new Monster("Ghoul", 70, 0 ,35 ,0 ,120),
-	};
+	vector<unique_ptr<Monster>> monsters;
+	monsters.push_back(make_unique<Monster>("Goblin", 50, 0 ,15 ,0 ,50));
+	monsters.push_back(make_unique<FireGoblin>("FireGoblin", 50, 0 ,15 ,0 ,50));
+	monsters.push_back(make_unique<Monster>("Skeleton", 60, 0 ,20 ,0 ,50));
+	monsters.push_back(make_unique<Monster>("Wraith", 50, 0 ,25 ,0 ,50));
+	monsters.push_back(make_unique<Monster>("Ghoul", 70, 0 ,35 ,0 ,120));
+	monsters.push_back(make_unique<Monster>("Andariel", 200, 0 ,150 ,0 ,500));
 	
-	vector<Monster*> tmp_monster;
-	int DungeonChoiceInput;
-	
-	cout << "==================================================\n";
-	cout << "||" << left << setw(46) << "               SELECT The Dungeon" << "||\n";
-	cout << "--------------------------------------------------\n";
-	cout << "||                                              ||\n";
-	cout << "|| 1. GoblinMap    2. SkeletonMap  3. GhoulMap  ||\n";
-	cout << "||                                              ||\n";
-	cout << "==================================================\n";
-	cout << ">> Input Dungeon Number : ";
-	cin >> DungeonChoiceInput;
-	
-	switch (DungeonChoiceInput)
-	{
-		case 1: tmp_monster = GoblinMap; break;
-		case 2: tmp_monster = SkeletonMap; break;
-		case 3: tmp_monster = GhoulMap; break;
-	}
-	
-	for (Monster* monster : tmp_monster)
+	for (auto& monster : monsters)
 	{
 		if (!player.isAlive()) break;
 		
@@ -205,22 +173,6 @@ int main()
 			player.PrintLevel();
 		}
 	}
-	
-	// new로 생성한 몬스터 메모리 해제
-	for (Monster* monster : GoblinMap)
-	{
-		delete monster;
-	}
-	for (Monster* monster : SkeletonMap)
-	{
-		delete monster;
-	}
-	for (Monster* monster : GhoulMap)
-	{
-		delete monster;
-	}
-	
-	delete playerPtr;
 	
 	cout << "\n";
 	system("pause"); // 프로그램 종료 전 결과창 유지

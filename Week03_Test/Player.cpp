@@ -22,6 +22,11 @@ Player::Player(const string& name, const string& characterClass, bool isHardcore
     int str, int dex, int vit, int eng)
         : Character(str, dex, vit, eng, 1), exp(0), expToNextLevel(100) {}
 
+Player::~Player()
+{
+    cout << "[플레이어 소멸]" << name << "\n";
+}
+
 void Player::LevelUp()
 {
     level++;
@@ -55,11 +60,6 @@ void Player::GainExp(int amount)
     }
 }
 
-void Player::AddItem(const Item& item)
-{
-    inventory.push_back(item);
-}
-
 void Player::Loot(int count)
 {
     cout << "\n[System] Looting Items...\n";
@@ -68,35 +68,21 @@ void Player::Loot(int count)
     for (int i = 0; i < count; i++)
     {
         // 랜덤 숫자 1개씩 인벤토리에 벡터에 넣음
-        int r = rand() % 4 + 1;
+        inventory.push_back(rand() % 4 + 1);
         
-        string itemname = "";
-        switch (r)
-        {
-            case 0:
-                itemname = "heal potion";
-                AddItem(Item(itemname, ItemType::Consumable, 30, 20));
-                break;
-            case 1:
-                itemname = "Weapon";
-                AddItem(Item(itemname, ItemType::Weapon, 10, 50));
-                break;
-            case 2:
-                itemname = "Armor";
-                AddItem(Item(itemname, ItemType::Armor, 10, 40));
-                break;
-            case 3:
-                itemname = "Gold";
-                AddItem(Item(itemname, ItemType::Gold, 0, 50));
-                break;
-        }
         // 인벤토리 출력
         cout << "==================================================\n";
         cout << "||" << left << setw(46) << "          INVENTORY" << "||\n";
         cout << "==================================================\n";
-        for (int j = 0; j < inventory.size(); j++)
+        for (int i = 0; i < inventory.size(); i++)
         {
-            cout << " > Slot " << j << " < [" << inventory[j].GetName() <<"]\n";
+            string itemName;
+            if (inventory[i] == 1) itemName = "Gold";
+            else if (inventory[i] == 2) itemName = "Healing Potion";
+            else if (inventory[i] == 3) itemName = "Weapon";
+            else if (inventory[i] == 4) itemName = "Armor";
+            else itemName = "None";
+            cout << " > Slot " << i << " < [" << itemName<<"]\n";
         }
     }
 }
