@@ -1,27 +1,16 @@
-#pragma once
+﻿#pragma once
 #include <string>
+using namespace std;
 
-// 아이템 종류 구분
-enum class ItemType {
-    None,
-    Consumable, // 소모품 (포션 등)
-    Weapon,     // 무기
-    Armor,      // 방어구
-    Gold        // 재화
-};
+enum class ItemType { Weapon, Armor, Consumable };
 
-class Item {
-private:
-    std::string name;
-    ItemType type;
-    int value;      // 회복량 또는 공격력/방어력 수치
-
+class Item
+{
 public:
-    Item();
-    Item(std::string n, ItemType t, int v, int g);
+    string name;
+    ItemType type;
+    
+    Item(const string &name, const ItemType type) : name(name), type(type) {}
+    virtual ~Item(); // 소멸자 타이밍 확인용
 
-    // Getters
-    std::string GetName() const { return name; }
-    ItemType GetType() const { return type; }
-    int GetValue() const { return value; }
 };

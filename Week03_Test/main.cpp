@@ -166,7 +166,19 @@ int main()
 			cout << "==================================================\n";
 		
 			// 아이템 루팅
-			player.Loot();
+			// 몬스터가 처치 -> 아이템 드롭 -> move로 소유권을 이전
+			unique_ptr<Item> droppedItem = monster->Drop();
+			if (droppedItem)
+			{
+				cout << "[드롭] " << droppedItem->name << " 가 바닥에 떨어졌습니다.\n";
+				player.Loot(move(droppedItem)); // 소유권 이전
+				cout << "[로그] droppedItem nullptr? " << (droppedItem == nullptr ? "YES" : "NO") << "\n"; 
+			}
+			else
+			{
+				cout << "[드롭] 아무것도 떨어지지 않았습니다.\n";
+			}
+			player.PrintInventory();
 
 			// 레벨업
 			player.GainExp(pendingExp);

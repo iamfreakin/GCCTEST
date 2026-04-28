@@ -1,6 +1,7 @@
-#include "Item.h"
+﻿#include "Item.h"
+#include <iostream>
 
-Item::Item() : name("Empty"), type(ItemType::None), value(0) {}
-
-Item::Item(std::string n, ItemType t, int v, int g) 
-    : name(n), type(t), value(v) {}
+Item::~Item()
+{
+    cout << "[아이템 소멸]" << name << "\n";
+}
