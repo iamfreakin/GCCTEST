@@ -8,4 +8,7 @@ public:
     
     int Attack() const override;
     string GetAttackMessage() const override { return " [Fire!]"; }
+
+    unique_ptr<Item> Drop() const override;
+    
 };
