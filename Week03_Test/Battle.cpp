@@ -11,6 +11,16 @@ Battle::Battle(Player& player, Monster& monster, shared_ptr<Mercenary> mercenary
 bool Battle::Run()
 {
     int action;
+    
+    // lock() :  weak_ptr에서 임시로 shated_ptr을 통해 데이터 접근
+    if (mercenary)
+    {
+        auto ownerPtr = mercenary->owner.lock();
+        if (ownerPtr)
+        {
+            cout << '[' << mercenary->name << "] : " << ownerPtr->GetName() << "님을 위해 싸우겠습니다." << '\n';
+        }
+    }
 
     while (monster.isAlive() && player.isAlive()) {
         int dGoblinHp = monster.GetHp();
