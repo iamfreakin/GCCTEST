@@ -72,14 +72,32 @@ void Player::PrintInventory() const
     cout << "==================================================\n";
     cout << "||" << left << setw(46) << "          INVENTORY" << "||\n";
     cout << "==================================================\n";
-    
-    // count개 아이템을 vector에 추가
-    for (int i = 0; i < inventory.size(); i++)
+    int i = 0;
+    // Range-based for문 + const auto&
+    for (const auto& item : inventory)
     {
         string typeStr;
-        if (inventory[i].type == ItemType::Weapon) typeStr = "Weapon";
-        else if (inventory[i].type == ItemType::Armor) typeStr = "Armor";
+        if (item.type == ItemType::Weapon) typeStr = "Weapon";
+        else if (item.type == ItemType::Armor) typeStr = "Armor";
         else typeStr = "Consumable";
-        cout << " > Slot " << i << " < [" << inventory[i].name <<"]\n";
+        cout << " > Slot " << i++ << " < [" << item.name <<"]\n";
     }
+}
+
+bool Player::UseItem(const string& itemName)
+{
+    for (auto it = inventory.begin(); it != inventory.end(); ++it)
+    {
+        if (it->name == itemName)
+        {
+            if (it->type == ItemType::Consumable)
+            {
+                Heal(maxHp); // 전체회복
+            }
+            it = inventory.erase(it); // erase 후 유효한 iterator 반환
+            cout << "[인벤토리] 아이템 사용 후 size = " << inventory.size() << " capacity = " << inventory.capacity() << "\n";
+            return true;
+        }
+    }
+    return false;
 }

@@ -1,4 +1,7 @@
 ﻿#pragma once
+#include <algorithm>
+#include <iostream>
+using namespace std;
 
 class Character
 {
@@ -43,4 +46,5 @@ public:
 
 	void TakeDamage(int damage);
 	virtual int Attack() const;
+	void Heal(int amount) { hp = min(hp + amount, maxHp); } // HP(힐량만큼)회복, maxHP 초과 불가
 };

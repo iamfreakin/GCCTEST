@@ -39,7 +39,7 @@ bool Battle::Run()
         cout << "==================================================\n";
         cout << combatMessage << "\n";
         cout << "--------------------------------------------------\n";
-        cout << ">> 1. Attack\n>> 2. Bash Attack\n Select Action : ";
+        cout << ">> 1. Attack\n>> 2. Bash Attack\n >> 3. Use Healing Potion\n Select Action : ";
         cin >> action;
 
         // 행동 처리 및 결과 메시지 갱신
@@ -77,6 +77,18 @@ bool Battle::Run()
                 + monster.GetName() + " attacked you! (Dmg: " + to_string(monster.Attack()) + ")";
             }
         }
+        else if (action == 3)
+        {
+            if (player.UseItem("Healing Potion"))
+            {
+                combatMessage = "=> Healing Potion을 사용 했습니다." + to_string(player.GetHp()) + " / " + to_string(player.GetMaxHp());
+            }
+            else
+            {
+                combatMessage = "=> Healing Potion이 없습니다.";
+            }
+        }
+        
         else {
             cin.clear();
             cin.ignore(100, '\n');
