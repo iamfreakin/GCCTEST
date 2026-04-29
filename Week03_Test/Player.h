@@ -6,6 +6,8 @@
 #include "Item.h"
 using namespace std;
 
+class Mercenary; // 전방선언
+
 // Character 클래스를 상속 받은 Player 클래스
 class Player : public Character
 {
@@ -38,6 +40,9 @@ public:
 	bool GetIsHardcore() const { return isHardcore; }
 	int GetExp() const { return exp; }
 	int GetExpToNextLevel() const { return expToNextLevel; }
+	
+	// 플레이어 -> 용병 참조
+	shared_ptr<Mercenary> companion;
 	
 	// 기능(함수)
 	int CriticalAttack() const;

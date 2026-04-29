@@ -7,9 +7,10 @@ class Battle
 private:
     Player& player;
     Monster& monster;
+    shared_ptr<Mercenary> mercenary; // 없는 경우 nullptr
     string combatMessage;
     
 public:
-    Battle(Player& player, Monster& monster);
+    Battle(Player& player, Monster& monsterm, shared_ptr<Mercenary> mercenary);
     bool Run();
 };

@@ -133,6 +133,7 @@
     <ClCompile Include="FireGoblin.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mercenary.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sorceress.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="FireGoblin.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="Mercenary.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sorceress.h" />
