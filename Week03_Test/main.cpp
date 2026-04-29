@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 #include <cstdlib> 
 #include <iomanip>
@@ -95,7 +95,7 @@ int main()
 	// Player 직업에따라 자식 클래스를 생성
 	shared_ptr<Player> playerPtr;
 	if (classChoiceInput == 3) playerPtr = make_shared<Barbarian>(userName, isHardcore);
-	else if (classChoiceInput == 7) playerPtr = make_unique<Sorceress>(userName, isHardcore);
+	else if (classChoiceInput == 7) playerPtr = make_shared<Sorceress>(userName, isHardcore);
 	else playerPtr = make_shared<Player>(userName, charactorClass, isHardcore);
 	Player& player = *playerPtr;
 	
@@ -129,13 +129,12 @@ int main()
 
 	system("pause"); // 상태창 확인 대기
 	system("cls");   // 화면 지우기
-	
-	shared_ptr<Mercenary> mercenary = make_shared<Mercenary>("Jiun", 12, playerPtr);
+
+	shared_ptr<Mercenary> mercenary = make_shared<Mercenary>("Rogue", 12, playerPtr);
 	player.companion = mercenary; // Player -> Mercenary 연결 (순환참조)
-	cout << "[Use_count] PlayerPtr 참조 수 : " << playerPtr.use_count() << '\n';
-	cout << "[Use_count] Mercemary 참조 수 : " << mercenary.use_count() << '\n';
-	// 서로 참조를 하는 상황이라 소멸자가 안나타날것음(순환참조)
-	// 왜냐? Count가 0이 아니기 때문임
+	cout << "[use_count] playerPtr 참조 수 :" << playerPtr.use_count() << "\n";
+	cout << "[use_count] mercenary 참조 수 :" << mercenary.use_count() << "\n";
+	// 서로 참조하고 있어서 소멸자가 안나타날것임 (count == 0 일때 delete)
 	
 	// 3. 전투 시스템 UI
 	int pendingExp = 0;
@@ -179,7 +178,7 @@ int main()
 			if (droppedItem)
 			{
 				cout << "[드롭] " << droppedItem->name << " 가 바닥에 떨어졌습니다.\n";
-				player.Loot(move(droppedItem)); // 소유권 이전
+				player.Loot(move(*droppedItem)); // 소유권 이전
 				cout << "[로그] droppedItem nullptr? " << (droppedItem == nullptr ? "YES" : "NO") << "\n"; 
 			}
 			else

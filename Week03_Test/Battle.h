@@ -11,6 +11,6 @@ private:
     string combatMessage;
     
 public:
-    Battle(Player& player, Monster& monsterm, shared_ptr<Mercenary> mercenary);
+    Battle(Player& player, Monster& monster, shared_ptr<Mercenary> mercenary = nullptr);
     bool Run();
 };

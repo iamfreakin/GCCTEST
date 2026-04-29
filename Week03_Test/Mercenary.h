@@ -1,21 +1,19 @@
 ﻿#pragma once
-#include <memory>
 #include <string>
-
+#include <iostream>
 #include "Player.h"
+using namespace std;
 
 class Mercenary
 {
 public:
-
-    std::string name;
+    string name;
     int attackDamage;
     weak_ptr<Player> owner;
     
-    Mercenary(const std::string name, int atk, shared_ptr<Player> owner);
-    virtual ~Mercenary();
+    Mercenary(const string& name, int atk, shared_ptr<Player> owner);
+    ~Mercenary();
     
     int Attack() const { return attackDamage; }
-    bool isOwnerAilve() const { return !owner.expired(); } // 주인이 살아있는지 확인
-    
+    bool IsOwnerAlive() const { return !owner.expired(); } // 주인이 살아 있는지 확인
 };

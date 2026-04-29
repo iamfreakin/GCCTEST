@@ -11,18 +11,15 @@ Player::Player(const string& name, const string& characterClass, bool isHardcore
     name(name), characterClass(characterClass), isHardcore(isHardcore),
     exp(0), expToNextLevel(100) // 단순 값 세팅 초기화
 {
-    maxHp = vitality * 2; // 계산이 필요한 값 세팅 초기화
-    hp = maxHp;
-    maxMp = (int)energy * 1.5f;
-    mp = maxMp;
-    attackDamage = strength * 0.2f;
-    attackSpeed = dexterity / 10.0f;
-    movingSpeed = dexterity / 30.0f;
+    inventory.reserve(6);  // 재할당에 따른 복사 (Reallocation)를 방지하기 위해서 미리 capacity 확보
 }
 
 Player::Player(const string& name, const string& characterClass, bool isHardcore,
     int str, int dex, int vit, int eng)
-        : Character(str, dex, vit, eng, 1), exp(0), expToNextLevel(100) {}
+        : Character(str, dex, vit, eng, 1), exp(0), expToNextLevel(100)
+{
+    inventory.reserve(6);  // 재할당에 따른 복사 (Reallocation)를 방지하기 위해서 미리 capacity 확보
+}
 
 Player::~Player()
 {
@@ -62,10 +59,11 @@ void Player::GainExp(int amount)
     }
 }
 
-void Player::Loot(unique_ptr<Item> item)
+void Player::Loot(Item item)
 {
-    cout << "[획득] "<< item->name <<"\n";
-    inventory.push_back(*item);
+    cout << "[획득] "<< item.name <<"\n";
+    inventory.emplace_back(std::move(item)); // Item을 인벤토리 안으로 직접 이동 
+    cout << "[인벤토리] size = " << inventory.size() << " capacity = " << inventory.capacity() << "\n";
 }
 
 void Player::PrintInventory() const

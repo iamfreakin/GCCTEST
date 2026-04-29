@@ -5,7 +5,6 @@
 #include "Character.h"
 #include "Item.h"
 using namespace std;
-
 class Mercenary; // 전방선언
 
 // Character 클래스를 상속 받은 Player 클래스
@@ -41,7 +40,7 @@ public:
 	int GetExp() const { return exp; }
 	int GetExpToNextLevel() const { return expToNextLevel; }
 	
-	// 플레이어 -> 용병 참조
+	// 플레이어->용병 참조
 	shared_ptr<Mercenary> companion;
 	
 	// 기능(함수)
@@ -51,6 +50,6 @@ public:
 	void GainExp(int amount);
 	void PreviewCritical() const;
 	void PrintLevel() const;
-	void Loot(unique_ptr<Item> item); // 소유권 이전을 통한 아이템 획득
+	void Loot(Item item); // 소권 이전을 통한 아이템 획득유
 	void PrintInventory() const; // 인벤토리 전체 출력
 };

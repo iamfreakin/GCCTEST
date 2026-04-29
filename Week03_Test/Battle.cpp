@@ -11,17 +11,17 @@ Battle::Battle(Player& player, Monster& monster, shared_ptr<Mercenary> mercenary
 bool Battle::Run()
 {
     int action;
-    
-    // lock() :  weak_ptr에서 임시로 shated_ptr을 통해 데이터 접근
+
+    // lock() : weak_ptr에서 임시로 shared_ptr을 통해 데이터 접근
     if (mercenary)
     {
         auto ownerPtr = mercenary->owner.lock();
         if (ownerPtr)
         {
-            cout << '[' << mercenary->name << "] : " << ownerPtr->GetName() << "님을 위해 싸우겠습니다." << '\n';
+            cout << "[" << mercenary->name << "]" << ownerPtr->GetName() << " 님을 위해 싸우겠습니다. \n";
         }
     }
-
+    
     while (monster.isAlive() && player.isAlive()) {
         int dGoblinHp = monster.GetHp();
         int dPlayerHp = player.GetHp();
@@ -49,9 +49,9 @@ bool Battle::Run()
 
             if (mercenary && monster.isAlive())
             {
-                int mercDmg =  mercenary->Attack();
+                int mercDmg = mercenary->Attack();
                 monster.TakeDamage(mercDmg);
-                combatMessage += "\n=> [" + mercenary->name + "] attacked! (Dmg: " + to_string(mercDmg) + ")";
+                combatMessage += "\n=> [" + mercenary->name + "] attacked! (Dmg: " + to_string(mercDmg) + ")"; 
             }
             
             if (monster.isAlive()) {
@@ -63,7 +63,7 @@ bool Battle::Run()
         else if (action == 2) {
             monster.TakeDamage(player.CriticalAttack()); // 2배 데미지 받음
             combatMessage = "=>" + player.GetAttackMessage() + " You attacked the Goblin! (Dmg: " + to_string(player.Attack()) + ")";
-            
+
             if (mercenary && monster.isAlive())
             {
                 int mercDmg = mercenary->Attack();
