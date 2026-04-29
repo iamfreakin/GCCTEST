@@ -6,7 +6,7 @@
 #include "Mercenary.h"
 
 Battle::Battle(Player& player, Monster& monster, shared_ptr<Mercenary> mercenary)
-    : player(player), monster(monster), combatMessage("[System] Battle Started!") {}
+    : player(player), monster(monster), mercenary(mercenary), combatMessage("[System] Battle Started!") {}
 
 bool Battle::Run()
 {
@@ -41,7 +41,7 @@ bool Battle::Run()
             {
                 int mercDmg =  mercenary->Attack();
                 monster.TakeDamage(mercDmg);
-                combatMessage += "=> Mercenary attacked the Goblin! (Dmg: " + to_string(mercDmg) + ")";
+                combatMessage += "\n=> [" + mercenary->name + "] attacked! (Dmg: " + to_string(mercDmg) + ")";
             }
             
             if (monster.isAlive()) {
@@ -53,7 +53,14 @@ bool Battle::Run()
         else if (action == 2) {
             monster.TakeDamage(player.CriticalAttack()); // 2배 데미지 받음
             combatMessage = "=>" + player.GetAttackMessage() + " You attacked the Goblin! (Dmg: " + to_string(player.Attack()) + ")";
-
+            
+            if (mercenary && monster.isAlive())
+            {
+                int mercDmg = mercenary->Attack();
+                monster.TakeDamage(mercDmg);
+                combatMessage += "\n=> [" + mercenary->name + "] attacked! (Dmg: " + to_string(mercDmg) + ")"; 
+            }
+            
             if (monster.isAlive()) {
                 player.TakeDamage(monster.Attack());
                 combatMessage += "\n=>" + monster.GetAttackMessage() + " The " 
