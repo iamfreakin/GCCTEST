@@ -17,4 +17,6 @@ public:
     bool IsActive() const { return active; }
     void SetActive(bool val) { active = val; }
     
+    
+    virtual std::string GetAttackMessage() const { return ""; }
 };

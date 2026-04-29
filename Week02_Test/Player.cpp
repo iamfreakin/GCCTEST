@@ -1,19 +1,20 @@
 #include "Player.h"
-#include <algorithm>
+#include <iostream>
 
 // 생성자: Character 부모 생성자에 기본 인자 전달
 Player::Player() : Character("Unknown", 10, 10, 10, 10, 1) {
     job = "None";
     exp = 0;
     expToNextLevel = 100;
-    std::fill(std::begin(inventory), std::end(inventory), 0);
 }
 
-void Player::Initialize(std::string n, int jobChoice) {
+void Player::Initialize(std::string n, int jobChoice) 
+{
     name = n; // 부모의 protected 멤버
     
     // 직업별 스탯 설정 (부모 클래스의 변수명 사용)
-    switch (jobChoice) {
+    switch (jobChoice) 
+    {
     case 1: job = "Warrior";  strength = 15; dexterity = 5;  vitality = 15; energy = 5;  break;
     case 2: job = "Rogue";    strength = 8;  dexterity = 18; vitality = 10; energy = 8;  break;
     case 3: job = "Sorcerer"; strength = 5;  dexterity = 10; vitality = 8;  energy = 20; break;
@@ -29,22 +30,34 @@ void Player::Initialize(std::string n, int jobChoice) {
     attackSpeed = 1.0f + (dexterity * 0.05f);
 }
 
-void Player::GainExp(int amount) {
+void Player::GainExp(int amount) 
+{
     exp += amount;
     
-    while (exp >= expToNextLevel) {
+    while (exp >= expToNextLevel) 
+        {
         LevelUp();
     }
 }
 
-void Player::LevelUp() {
+void Player::LevelUp() 
+{
     level++;        // 부모의 변수
     maxHp += 20;
     hp = maxHp;
 }
 
-void Player::AddItem(int type, int amount) {
-    if (type >= 0 && type < 5) {
-        inventory[type] += amount;
+void Player::AddItem(const Item& item) 
+{
+    inventory.push_back(item);
+}
+void Player::UseItem(int index)
+{
+    if (index < 0 || index >= inventory.size()) return;
+    
+    Item& item = inventory[index];
+    if (item.GetType() == ItemType::Consumable) {
+        hp = std::min(maxHp, hp + item.GetValue()); // HP 회복
+        inventory.erase(inventory.begin() + index);
     }
 }

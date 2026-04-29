@@ -13,14 +13,12 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9cd8b4b-d875-4a84-885d-24326dd99dcf" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/Character.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Character.h" afterDir="false" />
+    <list default="true" id="e9cd8b4b-d875-4a84-885d-24326dd99dcf" name="변경" comment="변경">
+      <change afterPath="$PROJECT_DIR$/FireGoblin.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FireGoblin.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Item.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Item.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Week02_Test.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Week02_Test.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GameData.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/GameData.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GameRenderer.h" beforeDir="false" afterPath="$PROJECT_DIR$/GameRenderer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GameplayManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/GameplayManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Monster.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Monster.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Monster.h" beforeDir="false" afterPath="$PROJECT_DIR$/Monster.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Player.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Player.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Player.h" beforeDir="false" afterPath="$PROJECT_DIR$/Player.h" afterDir="false" />
@@ -55,10 +53,11 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="cidr-memory-view://0" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Character.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Character.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ConsoleSystem.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/FireGoblin.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/FireGoblin.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/GameData.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/GameData.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/GameRenderer.h" root0="FORCE_HIGHLIGHTING" />
@@ -153,6 +152,8 @@
       <workItem from="1776930959000" duration="2764000" />
       <workItem from="1776933877574" duration="1926000" />
       <workItem from="1776996109131" duration="12204000" />
+      <workItem from="1777253638399" duration="2522000" />
+      <workItem from="1777270975517" duration="2344000" />
     </task>
     <task id="LOCAL-00001" summary="feat: 머지 후 pull 테스트">
       <option name="closed" value="true" />

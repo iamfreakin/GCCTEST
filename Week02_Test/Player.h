@@ -1,11 +1,13 @@
 #pragma once
-#include "Character.h" // 부모 클래스 포함
+#include <vector>
+#include "Character.h"
+#include "Item.h"
 
 class Player : public Character {
 private:
     // Player만이 가지는 고유 데이터
     std::string job;
-    int inventory[5]; // 이미지 설계에 맞춰 5칸으로 확장
+    std::vector<Item> inventory; // vector사용
     int exp;
     int expToNextLevel;
 
@@ -15,12 +17,15 @@ public:
     // Player 고유 기능
     void Initialize(std::string n, int jobChoice);
     void LevelUp();
-    void AddItem(int type, int amount);
     void GainExp(int amount);
+    
+    // 아이템 관련 함수 변경
+    void AddItem(const Item& item);
+    void UseItem(int index);
     
     // Player 고용 Getter
     std::string GetJobName() const { return job; }
-    int GetInvItem(int idx) const { return inventory[idx]; }
+    const std::vector<Item> GetInvItem(int idx) const { return inventory; }
     int GetExp() const { return exp; }
     int GetExpToNextLevel() const { return expToNextLevel; }
     
