@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <cstdlib> 
 #include <iomanip>
@@ -12,6 +12,7 @@
 #include "ItemData.h"
 #include "Mercenary.h"
 #include "Monster.h"
+#include "MonsterData.h"
 #include "Player.h"
 #include "Sorceress.h"
 using namespace std;
@@ -135,6 +136,7 @@ int main()
 	
 	// ItemDB 메인에 생성
 	unordered_map<int, ItemData> itemDB = createItemDB();
+	unordered_map<string, MonsterData> monsterDB = createMonsterDB();
 
 	shared_ptr<Mercenary> mercenary = make_shared<Mercenary>("Rogue", 12, playerPtr);
 	player.companion = mercenary; // Player -> Mercenary 연결 (순환참조)
@@ -144,13 +146,16 @@ int main()
 	
 	// 3. 전투 시스템 UI
 	int pendingExp = 0;
+	
 	vector<unique_ptr<Monster>> monsters;
-	monsters.push_back(make_unique<Monster>("Goblin", 50, 0 ,15 ,0 ,50, 1, vector<int>{101, 102}));
-	monsters.push_back(make_unique<FireGoblin>("FireGoblin", 50, 0 ,15 ,0 ,50, 1, vector<int>{101, 102}));
-	monsters.push_back(make_unique<Monster>("Skeleton", 60, 0 ,20 ,0 ,50, 1, vector<int>{103, 202, 101}));
-	monsters.push_back(make_unique<Monster>("Wraith", 50, 0 ,25 ,0 ,50, 1, vector<int>{301, 302}));
-	monsters.push_back(make_unique<Monster>("Ghoul", 70, 0 ,35 ,0 ,120, 1, vector<int>{201, 102, 101}));
-	monsters.push_back(make_unique<Monster>("Andariel", 200, 0 ,150 ,0 ,500, 1, vector<int>{101, 102}));
+	auto& Goblin = monsterDB["Goblin"];
+	auto& FireGoblin = monsterDB["FireGoblin"];
+	auto& Skeleton = monsterDB["Skeleton"];
+	auto& Wraith = monsterDB["Wraith"];
+	auto& Ghoul = monsterDB["Ghoul"];
+	auto& Andariel = monsterDB["Andariel"];
+	
+	monsters.push_back(make_unique<Monster>("Goblin", Goblin.str, Goblin.dex, Goblin.vit, Goblin.eng ,Goblin.expReward, 1, vector<int>{101, 102}));
 	
 	for (auto& monster : monsters)
 	{
