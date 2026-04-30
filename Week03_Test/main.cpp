@@ -9,6 +9,7 @@
 #include "Barbarian.h"
 #include "Battle.h"
 #include "FireGoblin.h"
+#include "GameInstance.h"
 #include "ItemData.h"
 #include "Mercenary.h"
 #include "Monster.h"
@@ -134,9 +135,10 @@ int main()
 	system("pause"); // 상태창 확인 대기
 	system("cls");   // 화면 지우기
 	
+	GameInstance& gameInstance = GameInstance::GetGameInstance();
 	// ItemDB 메인에 생성
-	unordered_map<int, ItemData> itemDB = createItemDB();
-	unordered_map<string, MonsterData> monsterDB = createMonsterDB();
+	auto& itemDB = gameInstance.itemDB;
+	auto& monsterDB = gameInstance.monsterDB;
 
 	shared_ptr<Mercenary> mercenary = make_shared<Mercenary>("Rogue", 12, playerPtr);
 	player.companion = mercenary; // Player -> Mercenary 연결 (순환참조)

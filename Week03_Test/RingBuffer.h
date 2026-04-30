@@ -28,6 +28,7 @@ public:
             int index = (start + i) % capacity;
             std::cout << data[index];
         }
+        std::cout << '\n';
     }
     
     int size() { return count; }
