@@ -4,9 +4,12 @@
 #include <iomanip>
 #include <vector>
 #include <memory>
+#include <unordered_map>
+
 #include "Barbarian.h"
 #include "Battle.h"
 #include "FireGoblin.h"
+#include "ItemData.h"
 #include "Mercenary.h"
 #include "Monster.h"
 #include "Player.h"
@@ -129,6 +132,9 @@ int main()
 
 	system("pause"); // 상태창 확인 대기
 	system("cls");   // 화면 지우기
+	
+	// ItemDB 메인에 생성
+	unordered_map<int, ItemData> itemDB = createItemDB();
 
 	shared_ptr<Mercenary> mercenary = make_shared<Mercenary>("Rogue", 12, playerPtr);
 	player.companion = mercenary; // Player -> Mercenary 연결 (순환참조)
@@ -139,12 +145,12 @@ int main()
 	// 3. 전투 시스템 UI
 	int pendingExp = 0;
 	vector<unique_ptr<Monster>> monsters;
-	monsters.push_back(make_unique<Monster>("Goblin", 50, 0 ,15 ,0 ,50));
-	monsters.push_back(make_unique<FireGoblin>("FireGoblin", 50, 0 ,15 ,0 ,50));
-	monsters.push_back(make_unique<Monster>("Skeleton", 60, 0 ,20 ,0 ,50));
-	monsters.push_back(make_unique<Monster>("Wraith", 50, 0 ,25 ,0 ,50));
-	monsters.push_back(make_unique<Monster>("Ghoul", 70, 0 ,35 ,0 ,120));
-	monsters.push_back(make_unique<Monster>("Andariel", 200, 0 ,150 ,0 ,500));
+	monsters.push_back(make_unique<Monster>("Goblin", 50, 0 ,15 ,0 ,50, 1, vector<int>{101, 102}));
+	monsters.push_back(make_unique<FireGoblin>("FireGoblin", 50, 0 ,15 ,0 ,50, 1, vector<int>{101, 102}));
+	monsters.push_back(make_unique<Monster>("Skeleton", 60, 0 ,20 ,0 ,50, 1, vector<int>{103, 202, 101}));
+	monsters.push_back(make_unique<Monster>("Wraith", 50, 0 ,25 ,0 ,50, 1, vector<int>{301, 302}));
+	monsters.push_back(make_unique<Monster>("Ghoul", 70, 0 ,35 ,0 ,120, 1, vector<int>{201, 102, 101}));
+	monsters.push_back(make_unique<Monster>("Andariel", 200, 0 ,150 ,0 ,500, 1, vector<int>{101, 102}));
 	
 	for (auto& monster : monsters)
 	{
@@ -173,13 +179,14 @@ int main()
 			cout << "==================================================\n";
 		
 			// 아이템 루팅
-			// 몬스터가 처치 -> 아이템 드롭 -> move로 소유권을 이전
-			unique_ptr<Item> droppedItem = monster->Drop();
-			if (droppedItem)
+			// 몬스터가 처치 -> 아이템 ID를 반환 -> ItemDB 조회 -> 인벤토리에 추가
+			int droppedItemId = monster->Drop();
+			if (droppedItemId != -1) // -1 이면 드롭 없음
 			{
-				cout << "[드롭] " << droppedItem->name << " 가 바닥에 떨어졌습니다.\n";
-				player.Loot(move(*droppedItem)); // 소유권 이전
-				cout << "[로그] droppedItem nullptr? " << (droppedItem == nullptr ? "YES" : "NO") << "\n"; 
+				ItemData& data = itemDB[droppedItemId];
+				Item droppedItem(data.name, data.type); // ItemData -> Item 객체를 생성
+				cout << "[드롭] " << data.name << " 가 바닥에 떨어졌습니다.\n";
+				player.Loot(move(droppedItem)); // 소유권 이전
 			}
 			else
 			{

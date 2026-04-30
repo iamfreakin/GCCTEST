@@ -25,5 +25,3 @@ int Character::Attack() const
 {
     return (int)attackDamage; 
 }
-
-void Character::Heal(int amount) { hp = std::min(hp + amount, maxHp); }

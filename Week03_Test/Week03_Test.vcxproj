@@ -132,9 +132,11 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="FireGoblin.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="ItemData.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mercenary.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="MonsterData.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Sorceress.cpp" />
   </ItemGroup>
@@ -144,8 +146,10 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="FireGoblin.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="ItemData.h" />
     <ClInclude Include="Mercenary.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="MonsterData.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Sorceress.h" />
   </ItemGroup>
