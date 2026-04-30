@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Item.h"
+#include "MonsterData.h"
 using namespace std;
 
 class Monster : public Character
@@ -15,8 +16,7 @@ private:
     vector<int> dropPool; // 몬스터가 드롭 가능한 아이템 ID 목록
 		
 public:
-    Monster(const string& name, int str, int dex, int vit, int eng,
-        int expReward, int lv = 1, vector<int> dropPool = {});
+    Monster(const string& name, const MonsterData& data, int lv = 1);
     
     string GetName() const { return name; }
     int GetExpReward() const { return expReward; }

@@ -148,14 +148,19 @@ int main()
 	int pendingExp = 0;
 	
 	vector<unique_ptr<Monster>> monsters;
-	auto& Goblin = monsterDB["Goblin"];
-	auto& FireGoblin = monsterDB["FireGoblin"];
-	auto& Skeleton = monsterDB["Skeleton"];
-	auto& Wraith = monsterDB["Wraith"];
-	auto& Ghoul = monsterDB["Ghoul"];
-	auto& Andariel = monsterDB["Andariel"];
-	
-	monsters.push_back(make_unique<Monster>("Goblin", Goblin.str, Goblin.dex, Goblin.vit, Goblin.eng ,Goblin.expReward, 1, vector<int>{101, 102}));
+	// auto& Goblin = monsterDB["Goblin"];
+	// auto& FireGoblin = monsterDB["FireGoblin"];
+	// auto& Skeleton = monsterDB["Skeleton"];
+	// auto& Wraith = monsterDB["Wraith"];
+	// auto& Ghoul = monsterDB["Ghoul"];
+	// auto& Andariel = monsterDB["Andariel"];
+	//
+	monsters.push_back(make_unique<Monster>("Goblin", monsterDB["Goblin"], 1));
+	monsters.push_back(make_unique<Monster>("FireGoblin", monsterDB["FireGoblin"], 1));
+	monsters.push_back(make_unique<Monster>("Skeleton", monsterDB["Skeleton"], 1));
+	monsters.push_back(make_unique<Monster>("Wraith", monsterDB["Wraith"], 1));
+	monsters.push_back(make_unique<Monster>("Ghoul", monsterDB["Ghoul"], 1));
+	monsters.push_back(make_unique<Monster>("Andariel", monsterDB["Andariel"], 1));
 	
 	for (auto& monster : monsters)
 	{

@@ -34,7 +34,7 @@ bool Battle::Run()
 
         // 체력 게이지와 이전 턴의 결과를 함께 출력
         cout << "==================================================\n";
-        cout << "|| GOBLIN [" << gBar << "] " << left << setw(12) << dGoblinHp << "||\n";
+        cout << "||" << monster.GetName() <<  "[" << gBar << "] " << left << setw(12) << dGoblinHp << "||\n";
         cout << "|| PLAYER [" << pBar << "] " << left << setw(12) << dPlayerHp << "||\n";
         cout << "==================================================\n";
         cout << combatMessage << "\n";

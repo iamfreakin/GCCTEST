@@ -1,9 +1,9 @@
 ﻿#include "Monster.h"
 #include <iostream>
 
-Monster::Monster(const string& name, int str, int dex, int vit, int eng, 
-    int expReward, int lv, vector<int> dropPool) 
-: Character(str, dex, vit, eng, lv), name(name), expReward(expReward), dropPool(dropPool)
+Monster::Monster(const string& name, const MonsterData& data , int lv) 
+    : Character(data.str, data.dex, data.vit, data.eng, lv), 
+        name(name), expReward(data.expReward), dropPool(data.dropPool)
 {}
 
 
