@@ -6,7 +6,10 @@
 #include "Mercenary.h"
 
 Battle::Battle(Player& player, Monster& monster, shared_ptr<Mercenary> mercenary)
-    : player(player), monster(monster), mercenary(mercenary), combatMessage("[System] Battle Started!") {}
+    : player(player), monster(monster), mercenary(mercenary), battleLog(5)
+{
+    battleLog.push("[System] Battle Started!\n");
+}
 
 bool Battle::Run()
 {
@@ -37,7 +40,7 @@ bool Battle::Run()
         cout << "||" << monster.GetName() <<  "[" << gBar << "] " << left << setw(12) << dGoblinHp << "||\n";
         cout << "|| PLAYER [" << pBar << "] " << left << setw(12) << dPlayerHp << "||\n";
         cout << "==================================================\n";
-        cout << combatMessage << "\n";
+        battleLog.printAll();
         cout << "--------------------------------------------------\n";
         cout << ">> 1. Attack\n>> 2. Bash Attack\n >> 3. Use Healing Potion\n Select Action : ";
         cin >> action;
@@ -45,47 +48,49 @@ bool Battle::Run()
         // 행동 처리 및 결과 메시지 갱신
         if (action == 1) {
             monster.TakeDamage(player.Attack()); // 객체 스스로가 데미지를 처리하고 있음
-            combatMessage = "=>" + player.GetAttackMessage() + " You attacked the Goblin! (Dmg: " + to_string(player.Attack()) + ")";
+            battleLog.push("=>" + player.GetAttackMessage() + " You attacked the Goblin! (Dmg: " + to_string(player.Attack()) + ")");
 
             if (mercenary && monster.isAlive())
             {
                 int mercDmg = mercenary->Attack();
                 monster.TakeDamage(mercDmg);
-                combatMessage += "\n=> [" + mercenary->name + "] attacked! (Dmg: " + to_string(mercDmg) + ")"; 
+                battleLog.push("\n=> [" + mercenary->name + "] attacked! (Dmg: " + to_string(mercDmg) + ")"); 
             }
             
             if (monster.isAlive()) {
                 player.TakeDamage(monster.Attack());
-                combatMessage += "\n=>" + monster.GetAttackMessage() + " The " 
-                + monster.GetName() + " attacked you! (Dmg: " + to_string(monster.Attack()) + ")";
+                battleLog.push("\n=>" + monster.GetAttackMessage() + " The " 
+                + monster.GetName() + " attacked you! (Dmg: " + to_string(monster.Attack()) + ")");
             }
         }
         else if (action == 2) {
             monster.TakeDamage(player.CriticalAttack()); // 2배 데미지 받음
-            combatMessage = "=>" + player.GetAttackMessage() + " You attacked the Goblin! (Dmg: " + to_string(player.Attack()) + ")";
+            battleLog.push("=>" + player.GetAttackMessage() + " You attacked the Goblin! (Dmg: " + 
+                to_string(player.Attack()) + ")");
 
             if (mercenary && monster.isAlive())
             {
                 int mercDmg = mercenary->Attack();
                 monster.TakeDamage(mercDmg);
-                combatMessage += "\n=> [" + mercenary->name + "] attacked! (Dmg: " + to_string(mercDmg) + ")"; 
+                battleLog.push("\n=> [" + mercenary->name + "] attacked! (Dmg: " + to_string(mercDmg) + ")"); 
             }
             
             if (monster.isAlive()) {
                 player.TakeDamage(monster.Attack());
-                combatMessage += "\n=>" + monster.GetAttackMessage() + " The " 
-                + monster.GetName() + " attacked you! (Dmg: " + to_string(monster.Attack()) + ")";
+                battleLog.push("\n=>" + monster.GetAttackMessage() + " The " 
+                + monster.GetName() + " attacked you! (Dmg: " + to_string(monster.Attack()) + ")");
             }
         }
         else if (action == 3)
         {
             if (player.UseItem("Healing Potion"))
             {
-                combatMessage = "=> Healing Potion을 사용 했습니다." + to_string(player.GetHp()) + " / " + to_string(player.GetMaxHp());
+                battleLog.push("=> Healing Potion을 사용 했습니다." + to_string(player.GetHp()) + 
+                    " / " + to_string(player.GetMaxHp()));
             }
             else
             {
-                combatMessage = "=> Healing Potion이 없습니다.";
+                battleLog.push("=> Healing Potion이 없습니다.\n");
             }
         }
         
@@ -93,7 +98,7 @@ bool Battle::Run()
             cin.clear();
             cin.ignore(100, '\n');
             player.TakeDamage(monster.Attack());
-            combatMessage = "=> Invalid action! You stumbled.\n=> The Goblin attacked you! (Dmg: 30)";
+            battleLog.push("=> Invalid action! You stumbled.\n=> The Goblin attacked you! (Dmg: 30)");
         }
 
         // 대기 없이 즉시 화면을 지우고 루프 처음으로 돌아가 변경된 체력바 출력

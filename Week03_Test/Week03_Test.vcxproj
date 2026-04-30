@@ -151,6 +151,7 @@
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterData.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="RingBuffer.h" />
     <ClInclude Include="Sorceress.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
