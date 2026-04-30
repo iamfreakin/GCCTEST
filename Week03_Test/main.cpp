@@ -192,8 +192,10 @@ int main()
 			{
 				cout << "[드롭] 아무것도 떨어지지 않았습니다.\n";
 			}
+			
+			player.SortInventory(); // 아이템 획득 후 이름순 정렬
 			player.PrintInventory();
-
+			
 			// 레벨업
 			player.GainExp(pendingExp);
 			player.PrintLevel();
